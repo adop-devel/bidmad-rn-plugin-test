@@ -14,6 +14,9 @@ const LINKING_ERROR =
 type BidmadPluginTestProps = {
   color: string;
   style: ViewStyle;
+  onLoad?: () => void;
+  onLoadFail?: () => void;
+  onClick?: () => void;
 };
 
 const ComponentName = 'BidmadPluginTestView';

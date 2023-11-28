@@ -12,10 +12,16 @@ class BidmadPluginTestViewManager: RCTViewManager {
     }
 }
 
-class BidmadPluginTestView : UIView {
+class BidmadPluginTestView : UIView, BIDMADOpenBiddingBannerDelegate {
+    
+    var onLoad: RCTDirectEventBlock?
+    var onLoadFail: RCTDirectEventBlock?
+    var onClick: RCTDirectEventBlock?
     
     lazy var associatedBannerAd: BidmadBannerAd = {
-        BidmadBannerAd(self.window!.rootViewController!, containerView: self, zoneID: "1c3e3085-333f-45af-8427-2810c26a72fc")
+        let ad = BidmadBannerAd(self.window!.rootViewController!, containerView: self, zoneID: "1c3e3085-333f-45af-8427-2810c26a72fc")
+        ad.delegate = self
+        return ad
     }()
     
     @objc var color: String = "" {
@@ -45,5 +51,17 @@ class BidmadPluginTestView : UIView {
         let b = CGFloat(Int(color) & 0x000000FF)
         
         return UIColor(red: r / 255.0, green: g / 255.0, blue: b / 255.0, alpha: 1)
+    }
+    
+    func onLoadAd(_ bidmadAd: OpenBiddingBanner) {
+        onLoad?([String: Any]())
+    }
+    
+    func onClickAd(_ bidmadAd: OpenBiddingBanner) {
+        onClick?([String: Any]())
+    }
+    
+    func onLoadFailAd(_ bidmadAd: OpenBiddingBanner, error: Error) {
+        onLoadFail?([String: Any]())
     }
 }
