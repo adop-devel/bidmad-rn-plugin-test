@@ -12,6 +12,7 @@ class BidmadPluginTestViewManager: RCTViewManager {
     }
 }
 
+@objcMembers
 class BidmadPluginTestView : UIView, BIDMADOpenBiddingBannerDelegate {
     
     var onLoad: RCTDirectEventBlock?
