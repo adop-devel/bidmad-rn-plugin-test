@@ -15,38 +15,54 @@ class BidmadPluginTestViewManager: RCTViewManager {
 @objcMembers
 class BidmadPluginTestView : UIView, BIDMADOpenBiddingBannerDelegate {
     
-    var iOSZoneId: String?
+    var iOSZoneId: String? {
+        didSet {
+            associatedAd.zoneID = iOSZoneId
+        }
+    }
+    
     var androidZoneId: String?
+    
+    var refreshInterval: Int? {
+        didSet {
+            guard let refreshInterval = refreshInterval else {
+                return
+            }
+            
+            associatedAd.refreshInterval = UInt(refreshInterval)
+        }
+    }
     
     var onLoad: RCTDirectEventBlock?
     var onLoadFail: RCTDirectEventBlock?
     var onClick: RCTDirectEventBlock?
     
-    lazy var associatedBannerAd: BidmadBannerAd = {
-        let ad = BidmadBannerAd(self.window!.rootViewController!, containerView: self, zoneID: iOSZoneId!)
+    lazy var associatedAd: (OpenBiddingBanner & OBHCommunicationDelegate) = {
+        let ad = OpenBiddingBanner(parentViewController: UIViewController(), rootView: self) as! (OpenBiddingBanner & OBHCommunicationDelegate)
         ad.delegate = self
         return ad
     }()
     
+    override func removeFromSuperview() {
+        super.removeFromSuperview()
+    }
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
-        
         self.backgroundColor = .clear
         
         DispatchQueue.main.async { [weak self] in
-            Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] timer in
-                guard let self = self else {
-                    timer.invalidate()
+            Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { timer in
+                guard let self = self,
+                      let window = self.window,
+                      let rootVC = window.rootViewController,
+                      self.associatedAd.zoneID != nil,
+                      self.associatedAd.zoneID?.isEmpty == false else {
                     return
                 }
                 
-                guard let window = self.window,
-                      let _ = window.rootViewController,
-                      let _ = self.iOSZoneId else {
-                    return
-                }
-                
-                self.associatedBannerAd.load()
+                self.associatedAd.parentViewController = rootVC
+                self.associatedAd.requestView()
                 timer.invalidate()
             }
         }
@@ -66,9 +82,5 @@ class BidmadPluginTestView : UIView, BIDMADOpenBiddingBannerDelegate {
     
     func onLoadFailAd(_ bidmadAd: OpenBiddingBanner, error: Error) {
         onLoadFail?([String: Any]())
-    }
-    
-    deinit {
-        print("I am being deallocated!")
     }
 }
