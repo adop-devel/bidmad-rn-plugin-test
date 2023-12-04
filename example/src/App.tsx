@@ -22,7 +22,7 @@ function HomeScreen({ navigation }) {
   };
 
   const [bannerHeight1] = useState(new Animated.Value(0));
-  const [bannerHeight2] = useState(new Animated.Value(0));
+  const [bannerOpacity2] = useState(new Animated.Value(0));
 
   const onBannerLoad1 = () => {
     console.log('BANNER 1 LOADED!');
@@ -35,8 +35,8 @@ function HomeScreen({ navigation }) {
 
   const onBannerLoad2 = () => {
     console.log('BANNER 2 LOADED!');
-    Animated.timing(bannerHeight2, {
-      toValue: 50,
+    Animated.timing(bannerOpacity2, {
+      toValue: 1,
       duration: 500,
       useNativeDriver: false,
     }).start();
@@ -124,7 +124,7 @@ function HomeScreen({ navigation }) {
       <Animated.View style={{ marginVertical: paddingAnim }}>
         <Text>This is Shrinking or Expading</Text>
       </Animated.View>
-      <Animated.View style={{ width: '100%', height: bannerHeight2, overflow: 'hidden' }}>
+      <Animated.View style={{ width: '100%', height: 50, overflow: 'hidden', opacity: bannerOpacity2 }}>
         <BidmadPluginTestView
           style={{ width: '100%', height: 50 }}
           iOSZoneId='1c3e3085-333f-45af-8427-2810c26a72fc'
@@ -149,6 +149,7 @@ function SecondScreen({ navigation }) {
         style={{ width: 320, height: 50 }}
         iOSZoneId='1c3e3085-333f-45af-8427-2810c26a72fc'
         androidZoneId=''
+        refreshInterval={90}
         onClick={() => console.log('BANNER CLICKED!')}
         onLoad={() => console.log('BANNER LOADED!')}
         onLoadFail={() => console.log('BANNER LOAD FAILED!')}

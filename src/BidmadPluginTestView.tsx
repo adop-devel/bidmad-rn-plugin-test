@@ -19,6 +19,7 @@ type BidmadPluginTestProps = {
   style: ViewStyle;
   iOSZoneId: string;
   androidZoneId: string;
+  refreshInterval?: number;
   onLoad?: () => void;
   onLoadFail?: () => void;
   onClick?: () => void;

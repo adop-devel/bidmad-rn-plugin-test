@@ -23,13 +23,13 @@ class BidmadPluginTestView : UIView, BIDMADOpenBiddingBannerDelegate {
     
     var androidZoneId: String?
     
-    var refreshInterval: Int? {
+    var refreshInterval: NSNumber? {
         didSet {
             guard let refreshInterval = refreshInterval else {
                 return
             }
             
-            associatedAd.refreshInterval = UInt(refreshInterval)
+            associatedAd.refreshInterval = UInt(truncating: refreshInterval)
         }
     }
     
