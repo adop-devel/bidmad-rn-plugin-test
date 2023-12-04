@@ -52,6 +52,60 @@ function HomeScreen({ navigation }) {
 
   BidmadPluginCommon.initializeSdk('ff8090d3-3e28-11ed-a117-026864a21938').then((initStatus: boolean) => {
     console.log('Initialization Status is:', initStatus);
+  });
+
+  BidmadPluginCommon.setAdvertiserTracking(true);
+
+  BidmadPluginCommon.advertiserTracking().then((enabled: boolean) => {
+    console.log('Tracking is', enabled);
+  });
+
+  BidmadPluginCommon.setIsChildDirectedAds(false);
+
+  BidmadPluginCommon.isChildDirectedTreatment().then((isChild: boolean) => {
+    console.log('Is Child is', isChild);
+  });
+
+  BidmadPluginCommon.setUserConsentCCPA(true);
+  
+  BidmadPluginCommon.isUserConsentCCPA().then((ccpaStatus: boolean) => {
+    console.log('ccpa status is', ccpaStatus);
+  });
+
+  BidmadPluginCommon.setIsDebug(true);
+
+  BidmadPluginCommon.isDebug().then((isDebug: boolean) => {
+    console.log('debug is', isDebug);
+  });
+
+  BidmadPluginCommon.setTestDeviceId('good bye bus');
+  
+  BidmadPluginCommon.testDeviceId().then((testDeviceId: string) => {
+    console.log('test device is', testDeviceId);
+  });
+
+  BidmadPluginCommon.setCuid('cuid goodgood');
+
+  BidmadPluginCommon.cuid().then((cuid: string) => {
+    console.log('cuid is', cuid);
+  });
+
+  BidmadPluginCommon.setUseServerSideCallback(true);
+
+  BidmadPluginCommon.useServerSideCallback().then((ssc: boolean) => {
+    if (ssc) {
+      console.log('using server side callback');
+    } else {
+      console.log('NOT using server side callback');
+    }
+  });
+
+  BidmadPluginCommon.testDeviceId().then((id: string) => {
+    console.log('test device id is', id, 'and type is', (typeof id));
+  });
+
+  BidmadPluginCommon.cuid().then((cuid: string) => {
+    console.log('cuid is', cuid, 'and type is', (typeof cuid));
   })
 
   return (

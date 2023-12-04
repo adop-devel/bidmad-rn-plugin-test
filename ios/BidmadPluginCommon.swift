@@ -43,7 +43,7 @@ class BidmadPluginCommon: NSObject, RCTBridgeModule {
         BidmadCommon.setAdvertiserTrackingEnabled(enable)
     }
     
-    func getAdvertiserTracking(resolver resolve: @escaping RCTPromiseResolveBlock) {
+    func getAdvertiserTracking(resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
         resolve(BidmadCommon.getAdvertiserTrackingEnabled())
     }
     
@@ -51,23 +51,33 @@ class BidmadPluginCommon: NSObject, RCTBridgeModule {
         BidmadCommon.setIsChildDirectedAds(isChildDirectedAds)
     }
     
-    func isChildDirectedTreatment(resolver resolve: @escaping RCTPromiseResolveBlock) {
-        resolve(BidmadCommon.isChildDirectedTreatment())
+    func isChildDirectedTreatment(resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+        guard let isChildDirectedAds = BidmadCommon.isChildDirectedTreatment() else {
+            resolve(nil)
+            return
+        }
+        
+        resolve(isChildDirectedAds.boolValue)
     }
     
     func set(userConsentStatusForCCPACompliance: Bool) {
         BidmadCommon.setUserConsentStatusForCCPACompliance(userConsentStatusForCCPACompliance)
     }
     
-    func isUserConsentCCPA(resolver resolve: @escaping RCTPromiseResolveBlock) {
-        resolve(BidmadCommon.isUserConsentCCPA())
+    func isUserConsentCCPA(resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+        guard let isUserConsentCCPA = BidmadCommon.isUserConsentCCPA() else {
+            resolve(nil)
+            return
+        }
+        
+        resolve(isUserConsentCCPA.boolValue)
     }
     
     func set(isDebug: Bool) {
         BidmadCommon.setIsDebug(isDebug)
     }
     
-    func isDebug(resolver resolve: @escaping RCTPromiseResolveBlock) {
+    func isDebug(resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
         resolve(BidmadCommon.isDebug())
     }
     
@@ -75,7 +85,7 @@ class BidmadPluginCommon: NSObject, RCTBridgeModule {
         BidmadCommon.setTestDeviceId(testDeviceId)
     }
     
-    func testDeviceId(resolver resolve: @escaping RCTPromiseResolveBlock) {
+    func testDeviceId(resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
         resolve(BidmadCommon.testDeviceId())
     }
 
@@ -83,7 +93,7 @@ class BidmadPluginCommon: NSObject, RCTBridgeModule {
         BidmadCommon.setCuid(cuid)
     }
     
-    func cuid(resolver resolve: @escaping RCTPromiseResolveBlock) {
+    func cuid(resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
         resolve(BidmadCommon.cuid())
     }
     
@@ -91,7 +101,7 @@ class BidmadPluginCommon: NSObject, RCTBridgeModule {
         BidmadCommon.setUseServerSideCallback(useServerSideCallback)
     }
     
-    func useServerSideCallback(resolver resolve: @escaping RCTPromiseResolveBlock) {
+    func useServerSideCallback(resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
         resolve(BidmadCommon.useServerSideCallback())
     }
 }
