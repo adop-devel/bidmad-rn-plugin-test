@@ -6,7 +6,7 @@ _Pragma("clang diagnostic ignored \"-Wstrict-prototypes\"")
 
 @interface RCT_EXTERN_MODULE(BidmadPluginCommon, NSObject)
 
-_RCT_EXTERN_REMAP_METHOD(initializeSdk, initializeSdkWithAppKey:(NSString *)appKey resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject, false)
+_RCT_EXTERN_REMAP_METHOD(initializeSdk, initializeSdkWithIOSAppKey:(NSString *)iOSAppKey androidAppKey:(NSString *)androidAppKey resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject, false)
 _RCT_EXTERN_REMAP_METHOD(reqAdTrackingAuthorization, reqAdTrackingAuthorizationWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject, false)
 _RCT_EXTERN_REMAP_METHOD(setAdvertiserTracking, setAdvertiserTrackingWithEnable:(BOOL)enable, false)
 _RCT_EXTERN_REMAP_METHOD(advertiserTracking, getAdvertiserTrackingWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject, false)

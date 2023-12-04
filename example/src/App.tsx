@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Button, Animated } from 'react-native';
-import { BidmadPluginTestView, BidmadPluginCommon } from 'bidmad-rn-plugin-test';
+import { BidmadPluginTestView, BidmadPluginCommon, BidmadTrackingAuthorizationStatus } from 'bidmad-rn-plugin-test';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -50,7 +50,7 @@ function HomeScreen({ navigation }) {
     console.log('Ad Tracking Authorization Status:', status);
   });
 
-  BidmadPluginCommon.initializeSdk('ff8090d3-3e28-11ed-a117-026864a21938').then((initStatus: boolean) => {
+  BidmadPluginCommon.initializeSdk('ff8090d3-3e28-11ed-a117-026864a21938', '').then((initStatus: boolean) => {
     console.log('Initialization Status is:', initStatus);
   });
 
