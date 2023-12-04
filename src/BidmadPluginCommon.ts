@@ -8,9 +8,9 @@ export enum BidmadTrackingAuthorizationStatus {
 
 type BidmadPluginCommonType = {
     reqAdTrackingAuthorization(): Promise<BidmadTrackingAuthorizationStatus>;
-    initializeSdk(appKey: string): Promise<boolean>;
+    initializeSdk(iOSAppKey: string, androidAppKey: string): Promise<boolean>;
     setAdvertiserTracking(enable: boolean): void;
-    advertiserTracking(): Promise<boolean>
+    advertiserTracking(): Promise<boolean>;
     setIsChildDirectedAds(isChildDirectedAds: boolean): void;
     isChildDirectedTreatment(): Promise<boolean | null>;
     setUserConsentCCPA(userConsentCCPA: boolean): void;
