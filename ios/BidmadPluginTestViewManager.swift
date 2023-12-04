@@ -1,5 +1,6 @@
 import OpenBiddingHelper
 
+@objcMembers
 @objc(BidmadPluginTestViewManager)
 class BidmadPluginTestViewManager: RCTViewManager {
     
@@ -7,8 +8,21 @@ class BidmadPluginTestViewManager: RCTViewManager {
         return BidmadPluginTestView()
     }
     
-    @objc override static func requiresMainQueueSetup() -> Bool {
+    override static func requiresMainQueueSetup() -> Bool {
         return false
+    }
+    
+    func load(_ reactTag: NSNumber) {
+        DispatchQueue.main.async { [weak self] in
+            guard let correspondingView = self?
+                .bridge
+                .uiManager
+                .view(forReactTag: reactTag) as? BidmadPluginTestView else {
+                return
+            }
+            
+            correspondingView.load()
+        }
     }
 }
 
@@ -39,6 +53,7 @@ class BidmadPluginTestView : UIView, BIDMADOpenBiddingBannerDelegate {
     
     lazy var associatedAd: (OpenBiddingBanner & OBHCommunicationDelegate) = {
         let ad = OpenBiddingBanner(parentViewController: UIViewController(), rootView: self) as! (OpenBiddingBanner & OBHCommunicationDelegate)
+        ad.parentViewController = nil
         ad.delegate = self
         return ad
     }()
@@ -82,5 +97,21 @@ class BidmadPluginTestView : UIView, BIDMADOpenBiddingBannerDelegate {
     
     func onLoadFailAd(_ bidmadAd: OpenBiddingBanner, error: Error) {
         onLoadFail?([String: Any]())
+    }
+    
+    func load() {
+        if associatedAd.parentViewController != nil {
+            self.associatedAd.requestView()
+        } else {
+            Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] timer in
+                guard let self = self,
+                      self.associatedAd.parentViewController != nil else {
+                    return
+                }
+                
+                self.associatedAd.requestView()
+                timer.invalidate()
+            }
+        }
     }
 }

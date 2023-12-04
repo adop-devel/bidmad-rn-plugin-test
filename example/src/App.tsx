@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Button, Animated } from 'react-native';
-import { BidmadPluginTestView, BidmadPluginCommon, BidmadTrackingAuthorizationStatus } from 'bidmad-rn-plugin-test';
+import { BidmadPluginTestView, BidmadPluginCommon, BidmadTrackingAuthorizationStatus, BidmadPluginTestController } from 'bidmad-rn-plugin-test';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -106,7 +106,9 @@ function HomeScreen({ navigation }) {
 
   BidmadPluginCommon.cuid().then((cuid: string) => {
     console.log('cuid is', cuid, 'and type is', (typeof cuid));
-  })
+  });
+
+  let controller: BidmadPluginTestController = null;
 
   return (
     <View style={styles.container}>
@@ -116,9 +118,19 @@ function HomeScreen({ navigation }) {
           style={{ width: '100%', height: 50 }}
           iOSZoneId='1c3e3085-333f-45af-8427-2810c26a72fc'
           androidZoneId=''
+          onControllerCreated={(createdController: BidmadPluginTestController) => {
+            controller = createdController;
+          }}
           onClick={() => console.log('BANNER CLICKED!')}
           onLoad={onBannerLoad1}
-          onLoadFail={() => console.log('BANNER LOAD FAILED!')}
+          onLoadFail={() => {
+            const retry = () => {
+              controller.load();
+              console.log("I am retrying!");
+            }
+
+            setTimeout(retry, 3000);
+          }}
         />
       </Animated.View>
       <Animated.View style={{ marginVertical: paddingAnim }}>
