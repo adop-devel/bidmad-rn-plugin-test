@@ -37,14 +37,16 @@ class BidmadPluginInterstitialModule: RCTEventEmitter, BIDMADOpenBiddingIntersti
         resolve(nil)
     }
     
-    func show(instanceId: Int, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
-        guard let topViewController = BIDMADUtil.topMostController() else {
+    func show(instanceId: Int, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+        DispatchQueue.main.async {
+            guard let topViewController = BIDMADUtil.topMostController() else {
+                resolve(nil)
+                return
+            }
+            
+            Self.instances[instanceId]?.showView(on: topViewController)
             resolve(nil)
-            return
         }
-        
-        Self.instances[instanceId]?.showView(on: topViewController)
-        resolve(nil)
     }
 
     func disposeInstance(instanceId: Int) {
