@@ -13,10 +13,10 @@ interface BidmadPluginRewardCallbacks {
 }
 
 class BidmadPluginReward {
-    instanceId: number;
+    instanceId: string;
     private callbacks?: BidmadPluginRewardCallbacks;
 
-    constructor(instanceId: number) {
+    constructor(instanceId: string) {
         this.instanceId = instanceId;
         
         eventEmitter.addListener('AdEvents', (event: any) => {

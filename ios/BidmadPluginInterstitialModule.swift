@@ -6,9 +6,8 @@ import OpenBiddingHelper
 class BidmadPluginInterstitialModule: RCTEventEmitter, BIDMADOpenBiddingInterstitialDelegate {
 
     private static var eventName = "AdEvents"
-    private static var instanceCounter: Int = 0
     private static let syncQueue: DispatchQueue = DispatchQueue(label: "com.adop.BidmadPluginInterstitial")
-    private static var instances: [Int: OpenBiddingInterstitial] = [:]
+    private static var instances: [String: OpenBiddingInterstitial] = [:]
     
     override func supportedEvents() -> [String]! {
         return [Self.eventName]
@@ -23,21 +22,18 @@ class BidmadPluginInterstitialModule: RCTEventEmitter, BIDMADOpenBiddingIntersti
     }
 
     func createInstance(iOSZoneId: String, androidZoneId: String, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
-        Self.syncQueue.async {
-            Self.instanceCounter += 1
-            let instanceId = Self.instanceCounter
-            Self.instances[instanceId] = OpenBiddingInterstitial(zoneID: iOSZoneId)
-            Self.instances[instanceId]?.delegate = self
-            resolve(instanceId)
-        }
+        let instanceId = UUID().uuidString
+        Self.instances[instanceId] = OpenBiddingInterstitial(zoneID: iOSZoneId)
+        Self.instances[instanceId]?.delegate = self
+        resolve(instanceId)
     }
     
-    func load(instanceId: Int, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func load(instanceId: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
         Self.instances[instanceId]?.requestView()
         resolve(nil)
     }
     
-    func show(instanceId: Int, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+    func show(instanceId: String, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
         DispatchQueue.main.async {
             guard let topViewController = BIDMADUtil.topMostController() else {
                 resolve(nil)
@@ -49,7 +45,7 @@ class BidmadPluginInterstitialModule: RCTEventEmitter, BIDMADOpenBiddingIntersti
         }
     }
 
-    func disposeInstance(instanceId: Int) {
+    func disposeInstance(instanceId: String) {
         Self.instances.removeValue(forKey: instanceId)
     }
     

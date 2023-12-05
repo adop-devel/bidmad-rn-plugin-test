@@ -6,9 +6,8 @@ import OpenBiddingHelper
 class BidmadPluginRewardModule: RCTEventEmitter, BIDMADOpenBiddingRewardVideoDelegate {
 
     private static var eventName = "AdEvents"
-    private static var instanceCounter: Int = 0
     private static let syncQueue: DispatchQueue = DispatchQueue(label: "com.adop.BidmadPluginReward")
-    private static var instances: [Int: OpenBiddingRewardVideo] = [:]
+    private static var instances: [String: OpenBiddingRewardVideo] = [:]
     
     override func supportedEvents() -> [String]! {
         return [Self.eventName]
@@ -23,21 +22,18 @@ class BidmadPluginRewardModule: RCTEventEmitter, BIDMADOpenBiddingRewardVideoDel
     }
 
     func createInstance(iOSZoneId: String, androidZoneId: String, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
-        Self.syncQueue.async {
-            Self.instanceCounter += 1
-            let instanceId = Self.instanceCounter
-            Self.instances[instanceId] = OpenBiddingRewardVideo(zoneID: iOSZoneId)
-            Self.instances[instanceId]?.delegate = self
-            resolve(instanceId)
-        }
+        let instanceId = UUID().uuidString
+        Self.instances[instanceId] = OpenBiddingRewardVideo(zoneID: iOSZoneId)
+        Self.instances[instanceId]?.delegate = self
+        resolve(instanceId)
     }
     
-    func load(instanceId: Int, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func load(instanceId: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
         Self.instances[instanceId]?.request()
         resolve(nil)
     }
     
-    func show(instanceId: Int, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+    func show(instanceId: String, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
         DispatchQueue.main.async {
             guard let topViewController = BIDMADUtil.topMostController() else {
                 resolve(nil)
@@ -49,7 +45,7 @@ class BidmadPluginRewardModule: RCTEventEmitter, BIDMADOpenBiddingRewardVideoDel
         }
     }
 
-    func disposeInstance(instanceId: Int) {
+    func disposeInstance(instanceId: String) {
         Self.instances.removeValue(forKey: instanceId)
     }
     

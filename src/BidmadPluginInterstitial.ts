@@ -12,10 +12,10 @@ interface BidmadPluginInterstitialCallbacks {
 }
 
 class BidmadPluginInterstitial {
-    instanceId: number;
+    instanceId: string;
     private callbacks?: BidmadPluginInterstitialCallbacks;
 
-    constructor(instanceId: number) {
+    constructor(instanceId: string) {
         this.instanceId = instanceId;
         
         eventEmitter.addListener('AdEvents', (event: any) => {
