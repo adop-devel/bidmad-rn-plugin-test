@@ -88,7 +88,16 @@ class BidmadPluginTestView : UIView, BIDMADOpenBiddingBannerDelegate {
     }
     
     func onLoadAd(_ bidmadAd: OpenBiddingBanner) {
-        onLoad?([String: Any]())
+        guard let adSize = bidmadAd.parentUIView?.subviews
+            .filter({ $0.isKind(of: BidmadParentUIView.self) })
+            .first?.frame.size else {
+            return
+        }
+        
+        onLoad?([
+            "width": adSize.width,
+            "height": adSize.height,
+        ])
     }
     
     func onClickAd(_ bidmadAd: OpenBiddingBanner) {

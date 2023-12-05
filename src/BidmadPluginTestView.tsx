@@ -1,4 +1,4 @@
-import React, {useRef, useEffect} from 'react';
+import React, {useRef, useEffect, useCallback, useState} from 'react';
 import {
   requireNativeComponent,
   UIManager,
@@ -38,7 +38,6 @@ class BidmadPluginTestController {
 }
 
 type BidmadPluginTestProps = {
-  style: ViewStyle;
   iOSZoneId: string;
   androidZoneId: string;
   refreshInterval?: number;
@@ -64,7 +63,37 @@ export const BidmadPluginTestView = (props: BidmadPluginTestProps) => {
     }
   }, [props.onControllerCreated]);
 
-  return <BidmadPluginTestBannerComponent {...props} ref={bidmadRef} />;
+  const [bannerWidth, setBannerWidth] = useState<number>(0);
+  const [bannerHeight, setBannerHeight] = useState<number>(0);
+
+  const loadCallbackWithResizing = useCallback((event: any) => {
+    const width = event.nativeEvent.width;
+    const height = event.nativeEvent.height;
+
+    if (bannerWidth < width) {
+      setBannerWidth(width);
+    }
+
+    if (bannerHeight < height) {
+      setBannerHeight(height);
+    }
+
+    if (props.onLoad) {
+      props.onLoad();
+    }
+  }, [props.onLoad]);
+
+  const onLayout = (event: any) => {
+    const {width, height} = event.nativeEvent.layout;
+    setBannerWidth(width);
+    setBannerHeight(height);
+  };
+
+  return <BidmadPluginTestBannerComponent style={{
+    width: bannerWidth,
+    height: bannerHeight,
+    alignSelf: 'center',
+  }} {...props} onLoad={loadCallbackWithResizing} ref={bidmadRef} onLayout={onLayout} />;
 };
 
 export default BidmadPluginTestView;

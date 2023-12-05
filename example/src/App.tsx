@@ -124,7 +124,6 @@ function HomeScreen({ navigation }) {
       <Text>Hello there</Text>
       <Animated.View style={{ width: '100%', height: bannerHeight1, overflow: 'hidden' }}>
         <BidmadPluginTestView
-          style={{ width: '100%', height: 50 }}
           iOSZoneId='1c3e3085-333f-45af-8427-2810c26a72fc'
           androidZoneId=''
           onControllerCreated={(createdController: BidmadPluginTestController) => {
@@ -147,7 +146,6 @@ function HomeScreen({ navigation }) {
       </Animated.View>
       <Animated.View style={{ width: '100%', height: 50, overflow: 'hidden', opacity: bannerOpacity2 }}>
         <BidmadPluginTestView
-          style={{ width: '100%', height: 50 }}
           iOSZoneId='1c3e3085-333f-45af-8427-2810c26a72fc'
           androidZoneId=''
           onClick={() => console.log('BANNER CLICKED!')}
