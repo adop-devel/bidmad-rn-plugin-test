@@ -1,6 +1,6 @@
 {
   "name": "bidmad-rn-plugin-test",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "This package is to install bidmad plugin for advertisement needs. This package is solely used for testing at this point.",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
@@ -25,15 +25,6 @@
     "!**/__mocks__",
     "!**/.*"
   ],
-  "scripts": {
-    "example": "yarn workspace react-native-bidmad-plugin-test-example",
-    "test": "jest",
-    "typecheck": "tsc --noEmit",
-    "lint": "eslint \"**/*.{js,ts,tsx}\"",
-    "clean": "del-cli android/build example/android/build example/android/app/build example/ios/build lib",
-    "prepare": "bob build",
-    "release": "release-it"
-  },
   "keywords": [
     "react-native",
     "ios",
