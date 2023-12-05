@@ -27,6 +27,7 @@ class BidmadPluginInterstitialModule: RCTEventEmitter, BIDMADOpenBiddingIntersti
             Self.instanceCounter += 1
             let instanceId = Self.instanceCounter
             Self.instances[instanceId] = OpenBiddingInterstitial(zoneID: iOSZoneId)
+            Self.instances[instanceId]?.delegate = self
             resolve(instanceId)
         }
     }

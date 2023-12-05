@@ -112,6 +112,11 @@ function HomeScreen({ navigation }) {
 
   BidmadPluginInterstitial.create('aea61d90-95a7-4e0d-addb-94f4c8707906', '').then((instance: BidmadPluginInterstitial) => {
     instance.load();
+    instance.setCallbacks({
+      onLoad: () => {
+        instance.show();
+      }
+    });
   });
 
   return (
