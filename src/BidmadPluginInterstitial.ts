@@ -1,30 +1,44 @@
-type BidmadPluginInterstitialType = {
-    createInstance(iOSZoneId: string, androidZoneId: string): Promise<number>;
-    disposeInstance(instanceId: number): void;
-    load(instanceId: number): Promise<void>;
-    show(instanceId: number): Promise<void>;
-};
+import { NativeEventEmitter, NativeModules } from 'react-native';
 
-const { BidmadPluginInterstitialModule } = require('react-native').NativeModules;
+const { BidmadPluginInterstitialModule } = NativeModules;
+const eventEmitter = new NativeEventEmitter(BidmadPluginInterstitialModule);
 
-export default BidmadPluginInterstitialModule as BidmadPluginInterstitialType;
-
-type LoadCallback = () => void;
-type LoadFailCallback = (error: Error) => void;
-type ShowCallback = () => void;
-type ClickCallback = () => void;
-type CloseCallback = () => void;
+interface BidmadPluginInterstitialCallbacks {
+    onLoad?: () => void;
+    onLoadFail?: (error: string) => void;
+    onShow?: () => void;
+    onClick?: () => void;
+    onClose?: () => void;
+}
 
 class BidmadPluginInterstitial {
     instanceId: number;
-    private onLoadCallback?: LoadCallback;
-    private onLoadFailCallback?: LoadFailCallback;
-    private onShowCallback?: ShowCallback;
-    private onClickCallback?: ClickCallback;
-    private onCloseCallback?: CloseCallback;
+    private callbacks?: BidmadPluginInterstitialCallbacks;
 
     constructor(instanceId: number) {
         this.instanceId = instanceId;
+        
+        eventEmitter.addListener('AdEvents', (event: any) => {
+            if (event.instanceId == this.instanceId) {
+                switch (event.action) {
+                    case 'onLoad':
+                        this.callbacks?.onLoad?.();
+                        break;
+                    case 'onLoadFail':
+                        this.callbacks?.onLoadFail?.(event.error);
+                        break;
+                    case 'onShow':
+                        this.callbacks?.onShow?.();
+                        break;
+                    case 'onClick':
+                        this.callbacks?.onClick?.();
+                        break;
+                    case 'onClose':
+                        this.callbacks?.onClose?.();
+                        break;
+                }
+            }
+        })
     }
 
     static async create(iOSZoneId: string, androidZoneId: string) {
@@ -40,7 +54,13 @@ class BidmadPluginInterstitial {
         await BidmadPluginInterstitialModule.show(this.instanceId);
     }
 
+    setCallbacks(callbacks: BidmadPluginInterstitialCallbacks) {
+        this.callbacks = callbacks;
+    }
+
     dispose() {
         BidmadPluginInterstitialModule.disposeInstance(this.instanceId);
     }
 }
+
+export default BidmadPluginInterstitial;
