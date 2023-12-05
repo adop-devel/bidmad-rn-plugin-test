@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Button, Animated } from 'react-native';
-import { BidmadPluginTestView, BidmadPluginCommon, BidmadTrackingAuthorizationStatus, BidmadPluginTestController } from 'bidmad-rn-plugin-test';
+import { BidmadPluginTestView, BidmadPluginCommon, BidmadTrackingAuthorizationStatus, BidmadPluginTestController, BidmadPluginInterstitial } from 'bidmad-rn-plugin-test';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -109,6 +109,10 @@ function HomeScreen({ navigation }) {
   });
 
   let controller: BidmadPluginTestController = null;
+
+  BidmadPluginInterstitial.create('aea61d90-95a7-4e0d-addb-94f4c8707906', '').then((instance: BidmadPluginInterstitial) => {
+    instance.load();
+  });
 
   return (
     <View style={styles.container}>

@@ -2,8 +2,8 @@ import Foundation
 import OpenBiddingHelper
 
 @objcMembers
-@objc(BidmadPluginInterstitial)
-class BidmadPluginInterstitial: RCTEventEmitter, BIDMADOpenBiddingInterstitialDelegate {
+@objc(BidmadPluginInterstitialModule)
+class BidmadPluginInterstitialModule: RCTEventEmitter, BIDMADOpenBiddingInterstitialDelegate {
 
     private static var eventName = "AdEvents"
     private static var instanceCounter: Int = 0
@@ -19,7 +19,7 @@ class BidmadPluginInterstitial: RCTEventEmitter, BIDMADOpenBiddingInterstitialDe
     }
 
     override static func moduleName() -> String! {
-        return "BidmadPluginInterstitial"
+        return "BidmadPluginInterstitialModule"
     }
 
     func createInstance(iOSZoneId: String, androidZoneId: String, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {

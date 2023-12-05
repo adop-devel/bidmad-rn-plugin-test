@@ -1,6 +1,7 @@
 import { NativeEventEmitter, NativeModules } from 'react-native';
 
 const { BidmadPluginInterstitialModule } = NativeModules;
+console.log('Native Modules are', BidmadPluginInterstitialModule);
 const eventEmitter = new NativeEventEmitter(BidmadPluginInterstitialModule);
 
 interface BidmadPluginInterstitialCallbacks {
