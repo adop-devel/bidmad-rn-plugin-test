@@ -1,190 +1,54 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Button, Animated } from 'react-native';
-import { BidmadPluginTestView, BidmadPluginCommon, BidmadTrackingAuthorizationStatus, BidmadPluginTestController, BidmadPluginInterstitial } from 'bidmad-rn-plugin-test';
+import { BidmadPluginTestView, BidmadPluginCommon, BidmadTrackingAuthorizationStatus, BidmadPluginTestController, BidmadPluginInterstitial, BidmadPluginReward } from 'bidmad-rn-plugin-test';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const Stack = createNativeStackNavigator();
+const ButtonStyle = { padding: 15 };
 
-function HomeScreen({ navigation }) {
-  const [paddingAnim] = useState(new Animated.Value(100)); // Initial padding
-
-  const togglePadding = () => {
-    // Determine new padding value
-    const newPadding = paddingAnim._value === 100 ? 0 : 100;
-
-    // Animate to new padding value
-    Animated.timing(paddingAnim, {
-      toValue: newPadding,
-      duration: 500,
-      useNativeDriver: false,
-    }).start();
-  };
-
-  const [bannerHeight1] = useState(new Animated.Value(0));
-  const [bannerOpacity2] = useState(new Animated.Value(0));
-
-  const onBannerLoad1 = () => {
-    console.log('BANNER 1 LOADED!');
-    Animated.timing(bannerHeight1, {
-      toValue: 50,
-      duration: 500,
-      useNativeDriver: false,
-    }).start();
-  };
-
-  const onBannerLoad2 = () => {
-    console.log('BANNER 2 LOADED!');
-    Animated.timing(bannerOpacity2, {
-      toValue: 1,
-      duration: 500,
-      useNativeDriver: false,
-    }).start();
-  };
-
-  // console.log(require('react-native').NativeModules);
-  console.log(BidmadPluginCommon);
-  console.log("uh oh haha");
-
-  BidmadPluginCommon.reqAdTrackingAuthorization().then((status: BidmadTrackingAuthorizationStatus) => {
-    console.log('Ad Tracking Authorization Status:', status);
-  });
-
+function HomeScreen({ navigation }: any) {
   BidmadPluginCommon.initializeSdk('ff8090d3-3e28-11ed-a117-026864a21938', '').then((initStatus: boolean) => {
-    console.log('Initialization Status is:', initStatus);
-  });
-
-  BidmadPluginCommon.setAdvertiserTracking(true);
-
-  BidmadPluginCommon.advertiserTracking().then((enabled: boolean) => {
-    console.log('Tracking is', enabled);
-  });
-
-  BidmadPluginCommon.setIsChildDirectedAds(false);
-
-  BidmadPluginCommon.isChildDirectedTreatment().then((isChild: boolean) => {
-    console.log('Is Child is', isChild);
-  });
-
-  BidmadPluginCommon.setUserConsentCCPA(true);
-  
-  BidmadPluginCommon.isUserConsentCCPA().then((ccpaStatus: boolean) => {
-    console.log('ccpa status is', ccpaStatus);
-  });
-
-  BidmadPluginCommon.setIsDebug(true);
-
-  BidmadPluginCommon.isDebug().then((isDebug: boolean) => {
-    console.log('debug is', isDebug);
-  });
-
-  BidmadPluginCommon.setTestDeviceId('good bye bus');
-  
-  BidmadPluginCommon.testDeviceId().then((testDeviceId: string) => {
-    console.log('test device is', testDeviceId);
-  });
-
-  BidmadPluginCommon.setCuid('cuid goodgood');
-
-  BidmadPluginCommon.cuid().then((cuid: string) => {
-    console.log('cuid is', cuid);
-  });
-
-  BidmadPluginCommon.setUseServerSideCallback(true);
-
-  BidmadPluginCommon.useServerSideCallback().then((ssc: boolean) => {
-    if (ssc) {
-      console.log('using server side callback');
-    } else {
-      console.log('NOT using server side callback');
-    }
-  });
-
-  BidmadPluginCommon.testDeviceId().then((id: string) => {
-    console.log('test device id is', id, 'and type is', (typeof id));
-  });
-
-  BidmadPluginCommon.cuid().then((cuid: string) => {
-    console.log('cuid is', cuid, 'and type is', (typeof cuid));
-  });
-
-  let controller: BidmadPluginTestController = null;
-
-  BidmadPluginInterstitial.create('aea61d90-95a7-4e0d-addb-94f4c8707906', '').then((instance: BidmadPluginInterstitial) => {
-    instance.load();
-    instance.setCallbacks({
-      onLoad: () => {
-        instance.show();
-      }
-    });
-  });
+    console.log('Initialize SDK status is', initStatus);
+  })
 
   return (
     <View style={styles.container}>
-      <Text>Hello there</Text>
-      <Animated.View style={{ width: '100%', height: bannerHeight1, overflow: 'hidden' }}>
-        <BidmadPluginTestView
-          iOSZoneId='1c3e3085-333f-45af-8427-2810c26a72fc'
-          androidZoneId=''
-          onControllerCreated={(createdController: BidmadPluginTestController) => {
-            controller = createdController;
-          }}
-          onClick={() => console.log('BANNER CLICKED!')}
-          onLoad={onBannerLoad1}
-          onLoadFail={() => {
-            const retry = () => {
-              controller.load();
-              console.log("I am retrying!");
-            }
-
-            setTimeout(retry, 3000);
-          }}
-        />
-      </Animated.View>
-      <Animated.View style={{ marginVertical: paddingAnim }}>
-        <Text>This is Shrinking or Expading</Text>
-      </Animated.View>
-      <Animated.View style={{ width: '100%', height: 50, overflow: 'hidden', opacity: bannerOpacity2 }}>
-        <BidmadPluginTestView
-          iOSZoneId='1c3e3085-333f-45af-8427-2810c26a72fc'
-          androidZoneId=''
-          onClick={() => console.log('BANNER CLICKED!')}
-          onLoad={onBannerLoad2}
-          onLoadFail={() => console.log('BANNER LOAD FAILED!')}
-        />
-      </Animated.View>
-      <Button title="Toggle Padding" onPress={togglePadding} />
-      <Button title="Go to Second" onPress={() => navigation.navigate('Second')} />
-      <Button title="Go to Third" onPress={() => navigation.navigate('Third')} />
+      <View style={ButtonStyle}>
+        <Button title='Banner Ad' onPress={() => navigation.navigate('BannerAdSample')} />
+      </View>
+      <View style={ButtonStyle}>
+        <Button title='Interstitial Ad' onPress={() => navigation.navigate('InterstitialAdSample')} />
+      </View>
+      <View style={ButtonStyle}>
+        <Button title='Reward Ad' onPress={() => navigation.navigate('RewardAdSample')} />
+      </View>
     </View>
   );
 }
 
-function SecondScreen({ navigation }) {
+function BannerAdSample({ navigation }: any) {
   return (
-    <View style={styles.container}>
-      <Text>Second Page</Text>
+    <View>
       <BidmadPluginTestView
-        style={{ width: 320, height: 50 }}
         iOSZoneId='1c3e3085-333f-45af-8427-2810c26a72fc'
-        androidZoneId=''
-        refreshInterval={90}
-        onClick={() => console.log('BANNER CLICKED!')}
-        onLoad={() => console.log('BANNER LOADED!')}
-        onLoadFail={() => console.log('BANNER LOAD FAILED!')}
       />
-      <Button title="Go to Home" onPress={() => navigation.navigate('Home')} />
-      <Button title="Go to Third" onPress={() => navigation.navigate('Third')} />
     </View>
   );
 }
 
-function ThirdScreen({ navigation }) {
+function InterstitialAdSample({ navigation }: any) {
   return (
-    <View style={styles.container}>
-      <Text>Third Page</Text>
-      <Button title="Go to Home" onPress={() => navigation.navigate('Home')} />
-      <Button title="Go to Second" onPress={() => navigation.navigate('Second')} />
+    <View>
+      <Text>Good!</Text>
+    </View>
+  );
+}
+
+function RewardAdSample({ navigation }: any) {
+  return (
+    <View>
+      <Text>Good!</Text>
     </View>
   );
 }
@@ -193,9 +57,26 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={HomeScreen} />
-        <Stack.Screen name="Second" component={SecondScreen} />
-        <Stack.Screen name="Third" component={ThirdScreen} />
+        <Stack.Screen 
+          name="Home"
+          component={HomeScreen}
+          options={{ title: 'Ad Samples' }} 
+        />
+        <Stack.Screen
+          name='BannerAdSample'
+          component={BannerAdSample}
+          options={{ title: 'Banner Ad' }}
+        />
+        <Stack.Screen
+          name='InterstitialAdSample'
+          component={InterstitialAdSample}
+          options={{ title: 'Interstitial Ad' }}
+        />
+        <Stack.Screen
+          name='RewardAdSample'
+          component={RewardAdSample}
+          options={{ title: 'Reward Ad' }}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -38,8 +38,8 @@ class BidmadPluginTestController {
 }
 
 type BidmadPluginTestProps = {
-  iOSZoneId: string;
-  androidZoneId: string;
+  iOSZoneId?: string;
+  androidZoneId?: string;
   refreshInterval?: number;
   onControllerCreated?: (controller: BidmadPluginTestController) => void;
   onLoad?: () => void;
@@ -77,6 +77,7 @@ export const BidmadPluginTestView = (props: BidmadPluginTestProps) => {
     if (bannerHeight < height) {
       setBannerHeight(height);
     }
+    console.log('width is', width, 'height is', height);
 
     if (props.onLoad) {
       props.onLoad();
@@ -87,6 +88,7 @@ export const BidmadPluginTestView = (props: BidmadPluginTestProps) => {
     const {width, height} = event.nativeEvent.layout;
     setBannerWidth(width);
     setBannerHeight(height);
+    console.log('width is', width, 'height is', height);
   };
 
   return <BidmadPluginTestBannerComponent style={{
