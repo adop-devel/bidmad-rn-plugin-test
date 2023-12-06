@@ -5,7 +5,7 @@ import OpenBiddingHelper
 @objc(BidmadPluginRewardModule)
 class BidmadPluginRewardModule: RCTEventEmitter, BIDMADOpenBiddingRewardVideoDelegate {
 
-    private static var eventName = "AdEvents"
+    private static var eventName = "BidmadRewardCallback"
     private static let syncQueue: DispatchQueue = DispatchQueue(label: "com.adop.BidmadPluginReward")
     private static var instances: [String: OpenBiddingRewardVideo] = [:]
     

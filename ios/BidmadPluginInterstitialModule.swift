@@ -5,7 +5,7 @@ import OpenBiddingHelper
 @objc(BidmadPluginInterstitialModule)
 class BidmadPluginInterstitialModule: RCTEventEmitter, BIDMADOpenBiddingInterstitialDelegate {
 
-    private static var eventName = "AdEvents"
+    private static var eventName = "BidmadInterstitialCallback"
     private static let syncQueue: DispatchQueue = DispatchQueue(label: "com.adop.BidmadPluginInterstitial")
     private static var instances: [String: OpenBiddingInterstitial] = [:]
     
