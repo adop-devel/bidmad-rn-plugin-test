@@ -1549,7 +1549,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.20.0, @babel/runtime@npm:^7.8.4":
+"@babel/runtime@npm:^7.0.0, @babel/runtime@npm:^7.23.5, @babel/runtime@npm:^7.8.4":
   version: 7.23.5
   resolution: "@babel/runtime@npm:7.23.5"
   dependencies:
@@ -2191,11 +2191,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*":
-  version: 20.10.1
-  resolution: "@types/node@npm:20.10.1"
+  version: 20.10.3
+  resolution: "@types/node@npm:20.10.3"
   dependencies:
     undici-types: ~5.26.4
-  checksum: 9dfdcd2496ce535dba0ae496985d6e991a8a5d70a180db3a94c947a2123d99318a95dce4aa2a192f7e57c3afa3fdb44d6fd63e18efd49568950d6c239dadcc39
+  checksum: 34a329494f0ea239af05eeb6f00f396963725b3eb9a2f79c5e6a6d37e823f2ab85e1079c2ee56723a37d8b89e7bbe2bd050c97144e5bb06dab93fd1cace65c97
   languageName: node
   linkType: hard
 
@@ -2602,16 +2602,16 @@ __metadata:
   linkType: hard
 
 "browserslist@npm:^4.21.9, browserslist@npm:^4.22.1":
-  version: 4.22.1
-  resolution: "browserslist@npm:4.22.1"
+  version: 4.22.2
+  resolution: "browserslist@npm:4.22.2"
   dependencies:
-    caniuse-lite: ^1.0.30001541
-    electron-to-chromium: ^1.4.535
-    node-releases: ^2.0.13
+    caniuse-lite: ^1.0.30001565
+    electron-to-chromium: ^1.4.601
+    node-releases: ^2.0.14
     update-browserslist-db: ^1.0.13
   bin:
     browserslist: cli.js
-  checksum: 7e6b10c53f7dd5d83fd2b95b00518889096382539fed6403829d447e05df4744088de46a571071afb447046abc3c66ad06fbc790e70234ec2517452e32ffd862
+  checksum: 33ddfcd9145220099a7a1ac533cecfe5b7548ffeb29b313e1b57be6459000a1f8fa67e781cf4abee97268ac594d44134fcc4a6b2b4750ceddc9796e3a22076d9
   languageName: node
   linkType: hard
 
@@ -2707,10 +2707,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"caniuse-lite@npm:^1.0.30001541":
-  version: 1.0.30001565
-  resolution: "caniuse-lite@npm:1.0.30001565"
-  checksum: 7621f358d0e1158557430a111ca5506008ae0b2c796039ef53aeebf4e2ba15e5241cb89def21ea3a633b6a609273085835b44a522165d871fa44067cdf29cccd
+"caniuse-lite@npm:^1.0.30001565":
+  version: 1.0.30001566
+  resolution: "caniuse-lite@npm:1.0.30001566"
+  checksum: 0f9084bf9f7d5c0a9ddb200c2baddb25dd2ad5a2f205f01e7b971f3e98e9a7bb23c2d86bae48237e9bc9782b682cffaaf3406d936937ab9844987dbe2a6401f2
   languageName: node
   linkType: hard
 
@@ -3086,10 +3086,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"electron-to-chromium@npm:^1.4.535":
-  version: 1.4.600
-  resolution: "electron-to-chromium@npm:1.4.600"
-  checksum: 9f2f9d6da82c57ea263be5e79d7eb6503fe1c2be656c745d591007bdf673ff594476a843beadfd4c2f2d4e4fdd39c25747db3120490353a1db5d321ec1fd89f8
+"electron-to-chromium@npm:^1.4.601":
+  version: 1.4.603
+  resolution: "electron-to-chromium@npm:1.4.603"
+  checksum: 4d81f73c0f7e5e6c9374b6ada0b5f85acf2c71cacf4d169c56d350387516a932da0f68bff81cfda62ef7f9365b5092586b9a0a364b5051dcc3a5bb0ae75a61b0
   languageName: node
   linkType: hard
 
@@ -3380,9 +3380,9 @@ __metadata:
   linkType: hard
 
 "flow-parser@npm:0.*":
-  version: 0.223.0
-  resolution: "flow-parser@npm:0.223.0"
-  checksum: ad73b915a8c3c968b6399eb909d1beddd9b85120fca6f39782315f6f44b03895caf15966169c2e577884c808c848e465632503bf2360c85cc23faaff3d263278
+  version: 0.223.3
+  resolution: "flow-parser@npm:0.223.3"
+  checksum: 4c0df178ff2e9140f57b5e7321b11e1cb827e00fbad6f342742c5834bd313f1bb0fe84d919d36e0c593e916c4ae5c8a93fcdb42c4328d6c5d77d75c8eed12090
   languageName: node
   linkType: hard
 
@@ -4881,7 +4881,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-releases@npm:^2.0.13":
+"node-releases@npm:^2.0.14":
   version: 2.0.14
   resolution: "node-releases@npm:2.0.14"
   checksum: 59443a2f77acac854c42d321bf1b43dea0aef55cd544c6a686e9816a697300458d4e82239e2d794ea05f7bbbc8a94500332e2d3ac3f11f52e4b16cbe638b3c41
@@ -5341,7 +5341,7 @@ __metadata:
   dependencies:
     "@babel/core": ^7.20.0
     "@babel/preset-env": ^7.20.0
-    "@babel/runtime": ^7.20.0
+    "@babel/runtime": ^7.23.5
     "@react-native/metro-config": ^0.72.11
     "@react-navigation/native": ^6.1.9
     "@react-navigation/native-stack": ^6.9.17
@@ -6114,8 +6114,8 @@ __metadata:
   linkType: hard
 
 "terser@npm:^5.15.0":
-  version: 5.24.0
-  resolution: "terser@npm:5.24.0"
+  version: 5.25.0
+  resolution: "terser@npm:5.25.0"
   dependencies:
     "@jridgewell/source-map": ^0.3.3
     acorn: ^8.8.2
@@ -6123,7 +6123,7 @@ __metadata:
     source-map-support: ~0.5.20
   bin:
     terser: bin/terser
-  checksum: d88f774b6fa711a234fcecefd7657f99189c367e17dbe95a51c2776d426ad0e4d98d1ffe6edfdf299877c7602e495bdd711d21b2caaec188410795e5447d0f6c
+  checksum: ddc5ba020060cea976105ea83f5832385297f5091198f10143c1224e35bbb4ad9dfc40ee95d51a8f1290d0a4c7910d66e0ecc4b596402e94ba829bfc58022151
   languageName: node
   linkType: hard
 

@@ -19,7 +19,7 @@ class BidmadPluginReward {
     constructor(instanceId: string) {
         this.instanceId = instanceId;
         
-        eventEmitter.addListener('AdEvents', (event: any) => {
+        eventEmitter.addListener('BidmadRewardCallback', (event: any) => {
             if (event.instanceId == this.instanceId) {
                 switch (event.action) {
                     case 'onRewardLoad':
@@ -33,6 +33,9 @@ class BidmadPluginReward {
                         break;
                     case 'onRewardComplete':
                         this.callbacks?.onComplete?.();
+                        break;
+                    case 'onRewardSkip':
+                        this.callbacks?.onSkip?.();
                         break;
                     case 'onRewardClick':
                         this.callbacks?.onClick?.();

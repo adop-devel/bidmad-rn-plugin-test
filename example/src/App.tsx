@@ -28,7 +28,7 @@ async function CommonInterfaceTest(): Promise<void> {
       break;
   }
 
-  const initStatus: boolean = await BidmadPluginCommon.initializeSdk('ff8090d3-3e28-11ed-a117-026864a21938', '');
+  const initStatus: boolean = await BidmadPluginCommon.initializeSdk('ff8090d3-3e28-11ed-a117-026864a21938', 'ff8090d3-3e28-11ed-a117-026864a21938');
 
   if (initStatus) {
     console.log("BidmadSDK is initialized");
@@ -36,38 +36,28 @@ async function CommonInterfaceTest(): Promise<void> {
     console.log("BidmadSDK is not initialized");
   }
 
-  await BidmadPluginCommon.setAdvertiserTracking(true);
-  const trackingSetting: boolean = BidmadPluginCommon.advertiserTracking();
-
-  console.log("Advertiser Tracking is set to", trackingSetting);
-
-  await BidmadPluginCommon.setIsChildDirectedAds(false);
+  await BidmadPluginCommon.setChildDirectedAds(false);
   const childSetting: boolean | null = await BidmadPluginCommon.isChildDirectedTreatment();
 
   console.log("Child Directed Treatment is set to", childSetting);
 
-  await BidmadPluginCommon.setUserConsentCCPA(true);
-  const ccpaStatus = await BidmadPluginCommon.isUserConsentCCPA();
-
-  console.log('CCPA Status is', ccpaStatus);
-
-  await BidmadPluginCommon.setIsDebug(true);
+  await BidmadPluginCommon.setDebug(true);
   const debugStatus = await BidmadPluginCommon.isDebug();
 
   console.log('Debug status is', debugStatus);
 
   await BidmadPluginCommon.setTestDeviceId('c0f7f3d439a3c06f26f602308cc1bfa9');
-  const testDeviceId = await BidmadPluginCommon.testDeviceId();
+  const testDeviceId = await BidmadPluginCommon.getTestDeviceId();
 
   console.log('Test Device ID is', testDeviceId);
 
   await BidmadPluginCommon.setCuid('Test CUID');
-  const cuid = await BidmadPluginCommon.cuid();
+  const cuid = await BidmadPluginCommon.getCuid();
 
   console.log('CUID is', cuid);
 
   await BidmadPluginCommon.setUseServerSideCallback(false);
-  const useSsc = await BidmadPluginCommon.useServerSideCallback();
+  const useSsc = await BidmadPluginCommon.getUseServerSideCallback();
 
   console.log('Server Side Callback is', useSsc);
 }
@@ -141,6 +131,20 @@ function BannerAdSample({ navigation }: any) {
 }
 
 function InterstitialAdSample({ navigation }: any) {
+    let cnt = 0;
+    BidmadPluginInterstitial.create('228b95a9-6f42-46d8-a40d-60f17f751eb1', 'e9acd7fc-a962-40e4-aaad-9feab1b4f821').then((interstitial) => {
+    interstitial.load();
+    interstitial.setCallbacks({
+      onLoad: () => {
+    console.log('callback onLoad' );
+        if(cnt == 0){
+          interstitial.show();
+        }
+        cnt++;
+      }
+    });
+  });
+
   return (
     <View>
       <Text>Good!</Text>
@@ -149,6 +153,20 @@ function InterstitialAdSample({ navigation }: any) {
 }
 
 function RewardAdSample({ navigation }: any) {
+    let cnt = 0;
+    BidmadPluginReward.create('29e1ef67-98d2-47b3-9fa2-9192327dd75d', '7d9a2c9e-5755-4022-85f1-6d4fc79e4418').then((reward) => {
+    reward.load();
+    reward.setCallbacks({
+      onLoad: () => {
+    console.log('callback onLoad' );
+        if(cnt == 0){
+          reward.show();
+        }
+        cnt++;
+      }
+    });
+  });
+
   return (
     <View>
       <Text>Good!</Text>

@@ -33,25 +33,11 @@ class BidmadPluginCommon {
         return initStatus;
     }
 
-    static async setAdvertiserTracking(enable: boolean): Promise<void> {
-        if (['ios', 'android'].includes(Platform.OS)) {
-            await BidmadPluginCommonModule.setAdvertiserTracking(enable);
-        }
-    }
-
-    static async advertiserTracking(): Promise<boolean> {
-        let adTracking = false;
-
-        if (['ios', 'android'].includes(Platform.OS)) {
-            adTracking = await BidmadPluginCommonModule.advertiserTracking();
-        }
-
-        return adTracking;
-    }
-
-    static async setIsChildDirectedAds(isChildDirectedAds: boolean): Promise<void> {
-        if (['ios', 'android'].includes(Platform.OS)) {
-            await BidmadPluginCommonModule.setIsChildDirectedAds(isChildDirectedAds);
+    static async setChildDirectedAds(isChildDirectedAds: boolean): Promise<void> {
+        if (Platform.OS === 'ios') {
+            initStatus = await BidmadPluginCommonModule.setIsChildDirectedAds(isChildDirectedAds);
+        } else if (Platform.OS === 'android') {
+            initStatus = await BidmadPluginCommonModule.setChildDirectedAds(isChildDirectedAds);
         }
     }
 
@@ -65,25 +51,11 @@ class BidmadPluginCommon {
         return isChild;
     }
 
-    static async setUserConsentCCPA(userConsentCCPA: boolean): Promise<void> {
-        if (['ios', 'android'].includes(Platform.OS)) {
-            await BidmadPluginCommonModule.setUserConsentCCPA(userConsentCCPA);
-        }
-    }
-    
-    static async isUserConsentCCPA(): Promise<boolean | null> {
-        let consentCCPA = null;
-
-        if (['ios', 'android'].includes(Platform.OS)) {
-            consentCCPA = await BidmadPluginCommonModule.isUserConsentCCPA();
-        }
-
-        return consentCCPA;
-    }
-
-    static async setIsDebug(isDebug: boolean): Promise<void> {
-        if (['ios', 'android'].includes(Platform.OS)) {
-            await BidmadPluginCommonModule.setIsDebug(isDebug);
+    static async setDebug(isDebug: boolean): Promise<void> {
+        if (Platform.OS === 'ios') {
+            initStatus = await BidmadPluginCommonModule.setIsDebug(isDebug);
+        } else if (Platform.OS === 'android') {
+            initStatus = await BidmadPluginCommonModule.setDebug(isDebug);
         }
     }
 
@@ -103,11 +75,13 @@ class BidmadPluginCommon {
         }
     }
 
-    static async testDeviceId(): Promise<string | null> {
+    static async getTestDeviceId(): Promise<string | null> {
         let id = null;
 
-        if (['ios', 'android'].includes(Platform.OS)) {
-            id = await BidmadPluginCommonModule.testDeviceId();
+        if (Platform.OS === 'ios') {
+            initStatus = await BidmadPluginCommonModule.testDeviceId();
+        } else if (Platform.OS === 'android') {
+            initStatus = await BidmadPluginCommonModule.getTestDeviceId();
         }
 
         return id;
@@ -118,11 +92,13 @@ class BidmadPluginCommon {
         }
     }
 
-    static async cuid(): Promise<string | null> {
+    static async getCuid(): Promise<string | null> {
         let cuid = null;
 
-        if (['ios', 'android'].includes(Platform.OS)) {
-            cuid = await BidmadPluginCommonModule.cuid();
+        if (Platform.OS === 'ios') {
+            initStatus = await BidmadPluginCommonModule.cuid();
+        } else if (Platform.OS === 'android') {
+            initStatus = await BidmadPluginCommonModule.getCuid();
         }
 
         return cuid;
@@ -134,11 +110,13 @@ class BidmadPluginCommon {
         }
     }
 
-    static async useServerSideCallback(): Promise<boolean> {
+    static async getUseServerSideCallback(): Promise<boolean> {
         let useSSC = false;
 
-        if (['ios', 'android'].includes(Platform.OS)) {
-            useSSC = await BidmadPluginCommonModule.useServerSideCallback();
+        if (Platform.OS === 'ios') {
+            initStatus = await BidmadPluginCommonModule.useServerSideCallback();
+        } else if (Platform.OS === 'android') {
+            initStatus = await BidmadPluginCommonModule.getUseServerSideCallback();
         }
 
         return useSSC;

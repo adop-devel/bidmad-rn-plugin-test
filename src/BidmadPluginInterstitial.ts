@@ -17,8 +17,8 @@ class BidmadPluginInterstitial {
 
     constructor(instanceId: string) {
         this.instanceId = instanceId;
-        
-        eventEmitter.addListener('AdEvents', (event: any) => {
+        console.log("constructor");
+        eventEmitter.addListener('BidmadInterstitialCallback', (event: any) => {
             if (event.instanceId == this.instanceId) {
                 switch (event.action) {
                     case 'onInterstitialLoad':
@@ -29,9 +29,6 @@ class BidmadPluginInterstitial {
                         break;
                     case 'onInterstitialShow':
                         this.callbacks?.onShow?.();
-                        break;
-                    case 'onInterstitialClick':
-                        this.callbacks?.onClick?.();
                         break;
                     case 'onInterstitialClose':
                         this.callbacks?.onClose?.();
@@ -46,11 +43,14 @@ class BidmadPluginInterstitial {
 
         if (Platform.OS === 'android') {
             const instanceId = await BidmadPluginInterstitialModule.createInstance(androidZoneId);
+            console.log("instanceId : ",instanceId);
             ad = new BidmadPluginInterstitial(instanceId);
         } else if (Platform.OS == 'ios') {
             const instanceId = await BidmadPluginInterstitialModule.createInstance(iOSZoneId);
             ad = new BidmadPluginInterstitial(instanceId);
         }
+
+        console.log(ad);
 
         return ad;
     }
