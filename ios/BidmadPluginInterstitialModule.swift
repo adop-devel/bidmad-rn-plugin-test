@@ -60,7 +60,7 @@ class BidmadPluginInterstitialModule: RCTEventEmitter, BIDMADOpenBiddingIntersti
         sendEvent(withName: Self.eventName, 
                   body: [
                     "instanceId": instanceId,
-                    "action": "onLoad",
+                    "action": "onInterstitialLoad",
                   ])
     }
     
@@ -75,7 +75,7 @@ class BidmadPluginInterstitialModule: RCTEventEmitter, BIDMADOpenBiddingIntersti
         sendEvent(withName: Self.eventName,
                   body: [
                     "instanceId": instanceId,
-                    "action": "onLoadFail",
+                    "action": "onInterstitialLoadFail",
                     "error": error.localizedDescription,
                   ])
     }
@@ -91,7 +91,7 @@ class BidmadPluginInterstitialModule: RCTEventEmitter, BIDMADOpenBiddingIntersti
         sendEvent(withName: Self.eventName,
                   body: [
                     "instanceId": instanceId,
-                    "action": "onShow",
+                    "action": "onInterstitialShow",
                   ])
     }
     
@@ -106,7 +106,7 @@ class BidmadPluginInterstitialModule: RCTEventEmitter, BIDMADOpenBiddingIntersti
         sendEvent(withName: Self.eventName,
                   body: [
                     "instanceId": instanceId,
-                    "action": "onClick",
+                    "action": "onInterstitialClick",
                   ])
     }
     
@@ -121,7 +121,7 @@ class BidmadPluginInterstitialModule: RCTEventEmitter, BIDMADOpenBiddingIntersti
         sendEvent(withName: Self.eventName,
                   body: [
                     "instanceId": instanceId,
-                    "action": "onClose",
+                    "action": "onInterstitialClose",
                   ])
     }
 }

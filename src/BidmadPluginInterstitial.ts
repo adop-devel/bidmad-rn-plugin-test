@@ -21,19 +21,19 @@ class BidmadPluginInterstitial {
         eventEmitter.addListener('AdEvents', (event: any) => {
             if (event.instanceId == this.instanceId) {
                 switch (event.action) {
-                    case 'onLoad':
+                    case 'onInterstitialLoad':
                         this.callbacks?.onLoad?.();
                         break;
-                    case 'onLoadFail':
+                    case 'onInterstitialLoadFail':
                         this.callbacks?.onLoadFail?.(event.error);
                         break;
-                    case 'onShow':
+                    case 'onInterstitialShow':
                         this.callbacks?.onShow?.();
                         break;
-                    case 'onClick':
+                    case 'onInterstitialClick':
                         this.callbacks?.onClick?.();
                         break;
-                    case 'onClose':
+                    case 'onInterstitialClose':
                         this.callbacks?.onClose?.();
                         break;
                 }

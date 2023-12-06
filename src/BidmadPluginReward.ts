@@ -22,22 +22,22 @@ class BidmadPluginReward {
         eventEmitter.addListener('AdEvents', (event: any) => {
             if (event.instanceId == this.instanceId) {
                 switch (event.action) {
-                    case 'onLoad':
+                    case 'onRewardLoad':
                         this.callbacks?.onLoad?.();
                         break;
-                    case 'onLoadFail':
+                    case 'onRewardLoadFail':
                         this.callbacks?.onLoadFail?.(event.error);
                         break;
-                    case 'onShow':
+                    case 'onRewardShow':
                         this.callbacks?.onShow?.();
                         break;
-                    case 'onComplete':
+                    case 'onRewardComplete':
                         this.callbacks?.onComplete?.();
                         break;
-                    case 'onClick':
+                    case 'onRewardClick':
                         this.callbacks?.onClick?.();
                         break;
-                    case 'onClose':
+                    case 'onRewardClose':
                         this.callbacks?.onClose?.();
                         break;
                 }

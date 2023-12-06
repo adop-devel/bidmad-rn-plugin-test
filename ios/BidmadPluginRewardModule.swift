@@ -60,7 +60,7 @@ class BidmadPluginRewardModule: RCTEventEmitter, BIDMADOpenBiddingRewardVideoDel
         sendEvent(withName: Self.eventName, 
                   body: [
                     "instanceId": instanceId,
-                    "action": "onLoad",
+                    "action": "onRewardLoad",
                   ])
     }
     
@@ -75,7 +75,7 @@ class BidmadPluginRewardModule: RCTEventEmitter, BIDMADOpenBiddingRewardVideoDel
         sendEvent(withName: Self.eventName,
                   body: [
                     "instanceId": instanceId,
-                    "action": "onLoadFail",
+                    "action": "onRewardLoadFail",
                     "error": error.localizedDescription,
                   ])
     }
@@ -91,7 +91,7 @@ class BidmadPluginRewardModule: RCTEventEmitter, BIDMADOpenBiddingRewardVideoDel
         sendEvent(withName: Self.eventName,
                   body: [
                     "instanceId": instanceId,
-                    "action": "onShow",
+                    "action": "onRewardShow",
                   ])
     }
     
@@ -106,7 +106,7 @@ class BidmadPluginRewardModule: RCTEventEmitter, BIDMADOpenBiddingRewardVideoDel
         sendEvent(withName: Self.eventName,
                   body: [
                     "instanceId": instanceId,
-                    "action": "onComplete",
+                    "action": "onRewardComplete",
                   ])
     }
     
@@ -121,7 +121,7 @@ class BidmadPluginRewardModule: RCTEventEmitter, BIDMADOpenBiddingRewardVideoDel
         sendEvent(withName: Self.eventName,
                   body: [
                     "instanceId": instanceId,
-                    "action": "onClick",
+                    "action": "onRewardClick",
                   ])
     }
     
@@ -136,7 +136,7 @@ class BidmadPluginRewardModule: RCTEventEmitter, BIDMADOpenBiddingRewardVideoDel
         sendEvent(withName: Self.eventName,
                   body: [
                     "instanceId": instanceId,
-                    "action": "onClose",
+                    "action": "onRewardClose",
                   ])
     }
 }
