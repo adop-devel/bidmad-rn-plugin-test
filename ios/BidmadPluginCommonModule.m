@@ -4,7 +4,7 @@ _Pragma("clang diagnostic ignored \"-Wstrict-prototypes\"")
 #import <React/RCTBridgeModule.h>
 #import <OpenBiddingHelper/OpenBiddingHelper.h>
 
-@interface RCT_EXTERN_MODULE(BidmadPluginCommon, NSObject)
+@interface RCT_EXTERN_MODULE(BidmadPluginCommonModule, NSObject)
 
 _RCT_EXTERN_REMAP_METHOD(initializeSdk, initializeSdkWithIOSAppKey:(NSString *)iOSAppKey androidAppKey:(NSString *)androidAppKey resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject, false)
 _RCT_EXTERN_REMAP_METHOD(reqAdTrackingAuthorization, reqAdTrackingAuthorizationWithResolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject, false)

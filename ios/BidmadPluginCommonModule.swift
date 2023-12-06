@@ -10,15 +10,15 @@ import Foundation
 import OpenBiddingHelper
 
 @objcMembers
-@objc(BidmadPluginCommon)
-class BidmadPluginCommon: NSObject, RCTBridgeModule {
+@objc(BidmadPluginCommonModule)
+class BidmadPluginCommonModule: NSObject, RCTBridgeModule {
     
     static func requiresMainQueueSetup() -> Bool {
         return false
     }
     
     static func moduleName() -> String! {
-        return "BidmadPluginCommon"
+        return "BidmadPluginCommonModule"
     }
     
     func initializeSdk(iOSAppKey: String,
