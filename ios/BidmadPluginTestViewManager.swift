@@ -29,13 +29,11 @@ class BidmadPluginTestViewManager: RCTViewManager {
 @objcMembers
 class BidmadPluginTestView : UIView, BIDMADOpenBiddingBannerDelegate {
     
-    var iOSZoneId: String? {
+    var zoneId: String? {
         didSet {
-            associatedAd.zoneID = iOSZoneId
+            associatedAd.zoneID = zoneId
         }
     }
-    
-    var androidZoneId: String?
     
     var refreshInterval: NSNumber? {
         didSet {

@@ -1,11 +1,10 @@
-import React, {useRef, useEffect, useCallback, useState} from 'react';
+import React, { useRef, useEffect, useCallback, useState } from 'react';
 import {
   requireNativeComponent,
   UIManager,
   Platform,
   View,
   findNodeHandle,
-  type ViewStyle,
 } from 'react-native';
 
 const LINKING_ERROR =
@@ -27,12 +26,9 @@ class BidmadPluginTestController {
   public load(): void {
     const handle = findNodeHandle(this.bidmadRef.current);
     if (handle) {
-      const commandId = UIManager.getViewManagerConfig(ComponentName).Commands.load as number;
-      UIManager.dispatchViewManagerCommand(
-        handle,
-        commandId,
-        []
-      );
+      const commandId = UIManager.getViewManagerConfig(ComponentName).Commands
+        .load as number;
+      UIManager.dispatchViewManagerCommand(handle, commandId, []);
     }
   }
 }
@@ -67,42 +63,74 @@ export const BidmadPluginTestView = (props: BidmadPluginTestProps) => {
   const [bannerHeight, setBannerHeight] = useState<number>(0);
   const [visibility, setVisibility] = useState<number>(0);
 
-  const loadCallbackWithResizing = useCallback((event: any) => {
-    // when sending the load callback event from swift or java to rn-js,
-    // width and height arguments must be passed from the event.
-    
-    const width = event.nativeEvent.width;
-    const height = event.nativeEvent.height;
+  const loadCallbackWithResizing = useCallback(
+    (event: any) => {
+      // when sending the load callback event from swift or java to rn-js,
+      // width and height arguments must be passed from the event.
 
-    if (bannerWidth < width) {
-      setBannerWidth(width);
-    }
+      const width = event.nativeEvent.width;
+      const height = event.nativeEvent.height;
 
-    if (bannerHeight < height) {
-      setBannerHeight(height);
-    }
+      if (bannerWidth < width) {
+        setBannerWidth(width);
+      }
 
-    if (visibility < 1) {
-      setVisibility(1);
-    }
+      if (bannerHeight < height) {
+        setBannerHeight(height);
+      }
 
-    if (props.onLoad) {
-      props.onLoad();
-    }
-  }, [props.onLoad]);
+      if (visibility < 1) {
+        setVisibility(1);
+      }
+
+      if (props.onLoad) {
+        props.onLoad();
+      }
+    },
+    [props.onLoad]
+  );
 
   const onLayout = (event: any) => {
-    const {width, height} = event.nativeEvent.layout;
+    const { width, height } = event.nativeEvent.layout;
     setBannerWidth(width);
     setBannerHeight(height);
   };
 
-  return <BidmadPluginTestBannerComponent style={{
-    opacity: visibility,
-    width: bannerWidth,
-    height: bannerHeight,
-    alignSelf: 'center',
-  }} {...props} onLoad={loadCallbackWithResizing} ref={bidmadRef} onLayout={onLayout} />;
+  if (Platform.OS === 'android') {
+    return (
+      <BidmadPluginTestBannerComponent
+        style={{
+          opacity: visibility,
+          width: bannerWidth,
+          height: bannerHeight,
+          alignSelf: 'center',
+        }}
+        {...props}
+        zoneId={props.androidZoneId}
+        onLoad={loadCallbackWithResizing}
+        ref={bidmadRef}
+        onLayout={onLayout}
+      />
+    );
+  } else if (Platform.OS === 'ios') {
+    return (
+      <BidmadPluginTestBannerComponent
+        style={{
+          opacity: visibility,
+          width: bannerWidth,
+          height: bannerHeight,
+          alignSelf: 'center',
+        }}
+        {...props}
+        zoneId={props.iOSZoneId}
+        onLoad={loadCallbackWithResizing}
+        ref={bidmadRef}
+        onLayout={onLayout}
+      />
+    );
+  } else {
+    return <View />;
+  }
 };
 
 export default BidmadPluginTestView;
