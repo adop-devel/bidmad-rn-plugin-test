@@ -45,6 +45,11 @@ class BidmadPluginRewardModule: RCTEventEmitter, BIDMADOpenBiddingRewardVideoDel
         }
     }
 
+    func isLoaded(instanceId: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+        let loadStatus = Self.instances[instanceId]?.isLoaded;
+        resolve(loadStatus);
+    }
+
     func disposeInstance(instanceId: String) {
         Self.instances.removeValue(forKey: instanceId)
     }
