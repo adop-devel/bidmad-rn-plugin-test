@@ -1,4 +1,4 @@
-import { NativeEventEmitter, NativeModules } from 'react-native';
+import { NativeEventEmitter, NativeModules, Platform } from 'react-native';
 
 const { BidmadPluginRewardModule } = NativeModules;
 const eventEmitter = new NativeEventEmitter(BidmadPluginRewardModule);
@@ -45,9 +45,18 @@ class BidmadPluginReward {
         })
     }
 
-    static async create(iOSZoneId: string, androidZoneId: string) {
-        const instanceId = await BidmadPluginRewardModule.createInstance(iOSZoneId, androidZoneId);
-        return new BidmadPluginReward(instanceId);
+    static async create(iOSZoneId: string, androidZoneId: string): Promise<BidmadPluginReward | null> {
+        let ad: BidmadPluginReward | null = null;
+
+        if (Platform.OS === 'android') {
+            const instanceId = await BidmadPluginRewardModule.createInstance(androidZoneId);
+            ad = new BidmadPluginReward(instanceId);
+        } else if (Platform.OS == 'ios') {
+            const instanceId = await BidmadPluginRewardModule.createInstance(iOSZoneId);
+            ad = new BidmadPluginReward(instanceId);
+        }
+
+        return ad;
     }
 
     async load() {
@@ -56,6 +65,11 @@ class BidmadPluginReward {
 
     async show() {
         await BidmadPluginRewardModule.show(this.instanceId);
+    }
+
+    async isLoaded(): Promise<boolean> {
+        const loadStatus = await BidmadPluginRewardModule.isLoaded(this.instanceId);
+        return loadStatus;
     }
 
     setCallbacks(callbacks: BidmadPluginRewardCallbacks) {

@@ -1,4 +1,4 @@
-import { NativeEventEmitter, NativeModules } from 'react-native';
+import { NativeEventEmitter, NativeModules, Platform } from 'react-native';
 
 const { BidmadPluginInterstitialModule } = NativeModules;
 const eventEmitter = new NativeEventEmitter(BidmadPluginInterstitialModule);
@@ -42,8 +42,17 @@ class BidmadPluginInterstitial {
     }
 
     static async create(iOSZoneId: string, androidZoneId: string) {
-        const instanceId = await BidmadPluginInterstitialModule.createInstance(iOSZoneId, androidZoneId);
-        return new BidmadPluginInterstitial(instanceId);
+        let ad: BidmadPluginInterstitial | null = null;
+
+        if (Platform.OS === 'android') {
+            const instanceId = await BidmadPluginInterstitialModule.createInstance(androidZoneId);
+            ad = new BidmadPluginInterstitial(instanceId);
+        } else if (Platform.OS == 'ios') {
+            const instanceId = await BidmadPluginInterstitialModule.createInstance(iOSZoneId);
+            ad = new BidmadPluginInterstitial(instanceId);
+        }
+
+        return ad;
     }
 
     async load() {
@@ -52,6 +61,11 @@ class BidmadPluginInterstitial {
 
     async show() {
         await BidmadPluginInterstitialModule.show(this.instanceId);
+    }
+
+    async isLoaded(): Promise<boolean> {
+        const loadStatus = await BidmadPluginInterstitialModule.isLoaded(this.instanceId);
+        return loadStatus;
     }
 
     setCallbacks(callbacks: BidmadPluginInterstitialCallbacks) {
