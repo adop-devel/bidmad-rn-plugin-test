@@ -21,9 +21,9 @@ class BidmadPluginInterstitialModule: RCTEventEmitter, BIDMADOpenBiddingIntersti
         return "BidmadPluginInterstitialModule"
     }
 
-    func createInstance(iOSZoneId: String, androidZoneId: String, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+    func createInstance(zoneId: String, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
         let instanceId = UUID().uuidString
-        Self.instances[instanceId] = OpenBiddingInterstitial(zoneID: iOSZoneId)
+        Self.instances[instanceId] = OpenBiddingInterstitial(zoneID: zoneId)
         Self.instances[instanceId]?.delegate = self
         resolve(instanceId)
     }

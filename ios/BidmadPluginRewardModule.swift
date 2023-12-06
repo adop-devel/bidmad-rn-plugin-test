@@ -21,9 +21,9 @@ class BidmadPluginRewardModule: RCTEventEmitter, BIDMADOpenBiddingRewardVideoDel
         return "BidmadPluginRewardModule"
     }
 
-    func createInstance(iOSZoneId: String, androidZoneId: String, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+    func createInstance(zoneId: String, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
         let instanceId = UUID().uuidString
-        Self.instances[instanceId] = OpenBiddingRewardVideo(zoneID: iOSZoneId)
+        Self.instances[instanceId] = OpenBiddingRewardVideo(zoneID: zoneId)
         Self.instances[instanceId]?.delegate = self
         resolve(instanceId)
     }
