@@ -14,7 +14,7 @@ class BidmadPluginCommon {
     static async reqAdTrackingAuthorization(): Promise<BidmadTrackingAuthorizationStatus> {
         let permission = BidmadTrackingAuthorizationStatus.NotDetermined;
 
-        if (Platform.OS == 'ios') {
+        if (Platform.OS === 'ios') {
             permission = await BidmadPluginCommonModule.reqAdTrackingAuthorization() as BidmadTrackingAuthorizationStatus;
         }
 
@@ -24,9 +24,9 @@ class BidmadPluginCommon {
     static async initializeSdk(iOSAppKey: string, androidAppKey: string): Promise<boolean> {
         let initStatus = false;
         
-        if (Platform.OS == 'ios') {
+        if (Platform.OS === 'ios') {
             initStatus = await BidmadPluginCommonModule.initializeSdk(iOSAppKey);
-        } else if (Platform.OS == 'android') {
+        } else if (Platform.OS === 'android') {
             initStatus = await BidmadPluginCommonModule.initializeSdk(androidAppKey);
         }
         
