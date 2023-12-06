@@ -21,11 +21,10 @@ class BidmadPluginCommonModule: NSObject, RCTBridgeModule {
         return "BidmadPluginCommonModule"
     }
     
-    func initializeSdk(iOSAppKey: String,
-                       androidAppKey: String,
+    func initializeSdk(appKey: String,
                        resolver resolve: @escaping RCTPromiseResolveBlock,
                        rejecter reject: @escaping RCTPromiseRejectBlock) {
-        BidmadCommon.initializeSdk(withAppKey: iOSAppKey) { success in
+        BidmadCommon.initializeSdk(withAppKey: appKey) { success in
             if success {
                 resolve(true)
             } else {
