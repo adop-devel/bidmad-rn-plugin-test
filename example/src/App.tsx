@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button, Animated } from 'react-native';
+import { StyleSheet, Text, View, Button, SafeAreaView, TextInput } from 'react-native';
 import { BidmadPluginTestView, BidmadPluginCommon, BidmadTrackingAuthorizationStatus, BidmadPluginTestController, BidmadPluginInterstitial, BidmadPluginReward } from 'bidmad-rn-plugin-test';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -13,7 +13,7 @@ function HomeScreen({ navigation }: any) {
   })
 
   return (
-    <View style={styles.container}>
+    <View>
       <View style={ButtonStyle}>
         <Button title='Banner Ad' onPress={() => navigation.navigate('BannerAdSample')} />
       </View>
@@ -28,12 +28,50 @@ function HomeScreen({ navigation }: any) {
 }
 
 function BannerAdSample({ navigation }: any) {
+  const [loadCounter, setLoadCounter] = useState(0);
+  const [loadFailCounter, setLoadFailCounter] = useState(0);
+  const [clickCounter, setClickCounter] = useState(0);
+
   return (
-    <View>
-      <BidmadPluginTestView
-        iOSZoneId='1c3e3085-333f-45af-8427-2810c26a72fc'
-      />
-    </View>
+    <SafeAreaView style={{
+      flex: 1
+    }}>
+      <View style={{
+        flex: 1,
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+      }}>
+        <View style={{
+          flex: 1,
+          justifyContent: 'center'
+        }}>
+          <Text>Load: {loadCounter}</Text>
+          <Text>Fail: {loadFailCounter}</Text>
+          <Text>Click: {clickCounter}</Text>
+        </View>
+
+        <View style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+          width: 320,
+          height: 50,
+          backgroundColor: 'lightblue',
+        }}> 
+          <BidmadPluginTestView
+            iOSZoneId='1c3e3085-333f-45af-8427-2810c26a72fc'
+            onLoad={() => {
+              setLoadCounter(loadCounter + 1);
+            }}
+            onLoadFail={() => {
+              setLoadFailCounter(loadFailCounter + 1);
+            }}
+            onClick={() => {
+              setClickCounter(clickCounter + 1);
+            }}
+          />
+        </View>
+      </View>
+    </SafeAreaView>
   );
 }
 

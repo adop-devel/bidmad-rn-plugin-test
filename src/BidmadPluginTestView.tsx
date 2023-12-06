@@ -65,8 +65,12 @@ export const BidmadPluginTestView = (props: BidmadPluginTestProps) => {
 
   const [bannerWidth, setBannerWidth] = useState<number>(0);
   const [bannerHeight, setBannerHeight] = useState<number>(0);
+  const [visibility, setVisibility] = useState<number>(0);
 
   const loadCallbackWithResizing = useCallback((event: any) => {
+    // when sending the load callback event from swift or java to rn-js,
+    // width and height arguments must be passed from the event.
+    
     const width = event.nativeEvent.width;
     const height = event.nativeEvent.height;
 
@@ -77,7 +81,10 @@ export const BidmadPluginTestView = (props: BidmadPluginTestProps) => {
     if (bannerHeight < height) {
       setBannerHeight(height);
     }
-    console.log('width is', width, 'height is', height);
+
+    if (visibility < 1) {
+      setVisibility(1);
+    }
 
     if (props.onLoad) {
       props.onLoad();
@@ -88,10 +95,10 @@ export const BidmadPluginTestView = (props: BidmadPluginTestProps) => {
     const {width, height} = event.nativeEvent.layout;
     setBannerWidth(width);
     setBannerHeight(height);
-    console.log('width is', width, 'height is', height);
   };
 
   return <BidmadPluginTestBannerComponent style={{
+    opacity: visibility,
     width: bannerWidth,
     height: bannerHeight,
     alignSelf: 'center',
