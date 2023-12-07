@@ -6,7 +6,7 @@ import OpenBiddingHelper
 class BidmadPluginInterstitialModule: RCTEventEmitter, BIDMADOpenBiddingInterstitialDelegate {
 
     private static let eventName = "BidmadInterstitialCallback"
-    private static var instances: [String: OpenBiddingInterstitial] = [:]
+    private static var instances: [String: (current: OpenBiddingInterstitial, future: OpenBiddingInterstitial?)] = [:]
     
     override func supportedEvents() -> [String]! {
         return [Self.eventName]
@@ -22,13 +22,13 @@ class BidmadPluginInterstitialModule: RCTEventEmitter, BIDMADOpenBiddingIntersti
 
     func createInstance(zoneId: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
         let instanceId = UUID().uuidString
-        Self.instances[instanceId] = OpenBiddingInterstitial(zoneID: zoneId)
-        Self.instances[instanceId]?.delegate = self
+        Self.instances[instanceId] = (OpenBiddingInterstitial(zoneID: zoneId), nil)
+        Self.instances[instanceId]!.current.delegate = self
         resolve(instanceId)
     }
     
     func load(instanceId: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
-        Self.instances[instanceId]?.requestView()
+        Self.instances[instanceId]?.current.requestView()
         resolve(nil)
     }
     
@@ -39,13 +39,13 @@ class BidmadPluginInterstitialModule: RCTEventEmitter, BIDMADOpenBiddingIntersti
                 return
             }
             
-            Self.instances[instanceId]?.showView(on: topViewController)
+            Self.instances[instanceId]?.current.showView(on: topViewController)
             resolve(nil)
         }
     }
 
     func isLoaded(instanceId: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
-        let loadStatus = Self.instances[instanceId]?.isLoaded;
+        let loadStatus = Self.instances[instanceId]?.current.isLoaded;
         resolve(loadStatus);
     }
 
@@ -55,7 +55,7 @@ class BidmadPluginInterstitialModule: RCTEventEmitter, BIDMADOpenBiddingIntersti
     
     func onLoadAd(_ bidmadAd: OpenBiddingInterstitial) {
         guard let instanceId = Self.instances
-            .filter({ $0.value.isEqual(bidmadAd) })
+            .filter({ $0.value.current.isEqual(bidmadAd) || $0.value.future?.isEqual(bidmadAd) ?? false })
             .first?
             .key else {
             return
@@ -70,7 +70,7 @@ class BidmadPluginInterstitialModule: RCTEventEmitter, BIDMADOpenBiddingIntersti
     
     func onLoadFailAd(_ bidmadAd: OpenBiddingInterstitial, error: Error) {
         guard let instanceId = Self.instances
-            .filter({ $0.value.isEqual(bidmadAd) })
+            .filter({ $0.value.current.isEqual(bidmadAd) })
             .first?
             .key else {
             return
@@ -86,11 +86,13 @@ class BidmadPluginInterstitialModule: RCTEventEmitter, BIDMADOpenBiddingIntersti
     
     func onShowAd(_ bidmadAd: OpenBiddingInterstitial) {
         guard let instanceId = Self.instances
-            .filter({ $0.value.isEqual(bidmadAd) })
+            .filter({ $0.value.current.isEqual(bidmadAd) })
             .first?
             .key else {
             return
         }
+        
+        preloadAd(instanceId: instanceId)
         
         sendEvent(withName: Self.eventName,
                   body: [
@@ -101,7 +103,7 @@ class BidmadPluginInterstitialModule: RCTEventEmitter, BIDMADOpenBiddingIntersti
     
     func onClickAd(_ bidmadAd: OpenBiddingInterstitial) {
         guard let instanceId = Self.instances
-            .filter({ $0.value.isEqual(bidmadAd) })
+            .filter({ $0.value.current.isEqual(bidmadAd) })
             .first?
             .key else {
             return
@@ -116,16 +118,26 @@ class BidmadPluginInterstitialModule: RCTEventEmitter, BIDMADOpenBiddingIntersti
     
     func onCloseAd(_ bidmadAd: OpenBiddingInterstitial) {
         guard let instanceId = Self.instances
-            .filter({ $0.value.isEqual(bidmadAd) })
+            .filter({ $0.value.current.isEqual(bidmadAd) })
             .first?
             .key else {
             return
         }
+        
+        Self.instances[instanceId] = (Self.instances[instanceId]!.future!, nil)
         
         sendEvent(withName: Self.eventName,
                   body: [
                     "instanceId": instanceId,
                     "action": "onInterstitialClose",
                   ])
+    }
+    
+    func preloadAd(instanceId: String) {
+        let futureAd = OpenBiddingInterstitial(zoneID: Self.instances[instanceId]!.current.zoneID)
+        futureAd.delegate = self
+        
+        Self.instances[instanceId] = (Self.instances[instanceId]!.current, futureAd)
+        Self.instances[instanceId]?.future?.requestView()
     }
 }
