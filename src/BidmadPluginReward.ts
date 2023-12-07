@@ -20,7 +20,7 @@ class BidmadPluginReward {
         this.instanceId = instanceId;
         
         eventEmitter.addListener('BidmadRewardCallback', (event: any) => {
-            if (event.instanceId == this.instanceId) {
+            if (event.instanceId === this.instanceId) {
                 switch (event.action) {
                     case 'onRewardLoad':
                         this.callbacks?.onLoad?.();

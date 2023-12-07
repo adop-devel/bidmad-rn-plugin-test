@@ -19,7 +19,7 @@ class BidmadPluginInterstitial {
         this.instanceId = instanceId;
         console.log("constructor");
         eventEmitter.addListener('BidmadInterstitialCallback', (event: any) => {
-            if (event.instanceId == this.instanceId) {
+            if (event.instanceId === this.instanceId) {
                 switch (event.action) {
                     case 'onInterstitialLoad':
                         this.callbacks?.onLoad?.();
