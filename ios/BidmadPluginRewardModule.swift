@@ -6,7 +6,7 @@ import OpenBiddingHelper
 class BidmadPluginRewardModule: RCTEventEmitter, BIDMADOpenBiddingRewardVideoDelegate {
 
     private static let eventName = "BidmadRewardCallback"
-    private static var instances: [String: OpenBiddingRewardVideo] = [:]
+    private static var instances: [String: (current: OpenBiddingRewardVideo, future: OpenBiddingRewardVideo?)] = [:]
     
     override func supportedEvents() -> [String]! {
         return [Self.eventName]
@@ -22,13 +22,13 @@ class BidmadPluginRewardModule: RCTEventEmitter, BIDMADOpenBiddingRewardVideoDel
 
     func createInstance(zoneId: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
         let instanceId = UUID().uuidString
-        Self.instances[instanceId] = OpenBiddingRewardVideo(zoneID: zoneId)
-        Self.instances[instanceId]?.delegate = self
+        Self.instances[instanceId] = (OpenBiddingRewardVideo(zoneID: zoneId), nil)
+        Self.instances[instanceId]!.current.delegate = self
         resolve(instanceId)
     }
     
     func load(instanceId: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
-        Self.instances[instanceId]?.request()
+        Self.instances[instanceId]?.current.request()
         resolve(nil)
     }
     
@@ -39,13 +39,13 @@ class BidmadPluginRewardModule: RCTEventEmitter, BIDMADOpenBiddingRewardVideoDel
                 return
             }
             
-            Self.instances[instanceId]?.show(on: topViewController)
+            Self.instances[instanceId]?.current.show(on: topViewController)
             resolve(nil)
         }
     }
 
     func isLoaded(instanceId: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
-        let loadStatus = Self.instances[instanceId]?.isLoaded;
+        let loadStatus = Self.instances[instanceId]?.current.isLoaded;
         resolve(loadStatus);
     }
 
@@ -55,7 +55,7 @@ class BidmadPluginRewardModule: RCTEventEmitter, BIDMADOpenBiddingRewardVideoDel
     
     func onLoadAd(_ bidmadAd: OpenBiddingRewardVideo) {
         guard let instanceId = Self.instances
-            .filter({ $0.value.isEqual(bidmadAd) })
+            .filter({ $0.value.current.isEqual(bidmadAd) || $0.value.future?.isEqual(bidmadAd) ?? false })
             .first?
             .key else {
             return
@@ -70,7 +70,7 @@ class BidmadPluginRewardModule: RCTEventEmitter, BIDMADOpenBiddingRewardVideoDel
     
     func onLoadFailAd(_ bidmadAd: OpenBiddingRewardVideo, error: Error) {
         guard let instanceId = Self.instances
-            .filter({ $0.value.isEqual(bidmadAd) })
+            .filter({ $0.value.current.isEqual(bidmadAd) })
             .first?
             .key else {
             return
@@ -86,11 +86,13 @@ class BidmadPluginRewardModule: RCTEventEmitter, BIDMADOpenBiddingRewardVideoDel
     
     func onShowAd(_ bidmadAd: OpenBiddingRewardVideo) {
         guard let instanceId = Self.instances
-            .filter({ $0.value.isEqual(bidmadAd) })
+            .filter({ $0.value.current.isEqual(bidmadAd) })
             .first?
             .key else {
             return
         }
+        
+        preloadAd(instanceId: instanceId)
         
         sendEvent(withName: Self.eventName,
                   body: [
@@ -101,7 +103,7 @@ class BidmadPluginRewardModule: RCTEventEmitter, BIDMADOpenBiddingRewardVideoDel
     
     func onCompleteAd(_ bidmadAd: OpenBiddingRewardVideo) {
         guard let instanceId = Self.instances
-            .filter({ $0.value.isEqual(bidmadAd) })
+            .filter({ $0.value.current.isEqual(bidmadAd) })
             .first?
             .key else {
             return
@@ -116,7 +118,7 @@ class BidmadPluginRewardModule: RCTEventEmitter, BIDMADOpenBiddingRewardVideoDel
     
     func onClickAd(_ bidmadAd: OpenBiddingRewardVideo) {
         guard let instanceId = Self.instances
-            .filter({ $0.value.isEqual(bidmadAd) })
+            .filter({ $0.value.current.isEqual(bidmadAd) })
             .first?
             .key else {
             return
@@ -131,16 +133,26 @@ class BidmadPluginRewardModule: RCTEventEmitter, BIDMADOpenBiddingRewardVideoDel
     
     func onCloseAd(_ bidmadAd: OpenBiddingRewardVideo) {
         guard let instanceId = Self.instances
-            .filter({ $0.value.isEqual(bidmadAd) })
+            .filter({ $0.value.current.isEqual(bidmadAd) })
             .first?
             .key else {
             return
         }
+        
+        Self.instances[instanceId] = (Self.instances[instanceId]!.future!, nil)
         
         sendEvent(withName: Self.eventName,
                   body: [
                     "instanceId": instanceId,
                     "action": "onRewardClose",
                   ])
+    }
+    
+    func preloadAd(instanceId: String) {
+        let futureAd = OpenBiddingRewardVideo(zoneID: Self.instances[instanceId]!.current.zoneID)
+        futureAd.delegate = self
+        
+        Self.instances[instanceId] = (Self.instances[instanceId]!.current, futureAd)
+        Self.instances[instanceId]?.future?.request()
     }
 }
