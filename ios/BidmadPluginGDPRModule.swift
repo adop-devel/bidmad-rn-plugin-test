@@ -188,5 +188,9 @@ extension BIDMADGDPRforGoogle {
     
     @objc public func onConsentFormDismissed(_ formError: Error!) {
         BidmadPluginGDPRModule.shared?.onConsentFormDismissed(formError, self)
+        
+        DispatchQueue.main.async { [weak self] in
+            self?.parentViewController = UIViewController()
+        }
     }
 }
