@@ -5,8 +5,7 @@ import OpenBiddingHelper
 @objc(BidmadPluginInterstitialModule)
 class BidmadPluginInterstitialModule: RCTEventEmitter, BIDMADOpenBiddingInterstitialDelegate {
 
-    private static var eventName = "BidmadInterstitialCallback"
-    private static let syncQueue: DispatchQueue = DispatchQueue(label: "com.adop.BidmadPluginInterstitial")
+    private static let eventName = "BidmadInterstitialCallback"
     private static var instances: [String: OpenBiddingInterstitial] = [:]
     
     override func supportedEvents() -> [String]! {
@@ -21,7 +20,7 @@ class BidmadPluginInterstitialModule: RCTEventEmitter, BIDMADOpenBiddingIntersti
         return "BidmadPluginInterstitialModule"
     }
 
-    func createInstance(zoneId: String, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+    func createInstance(zoneId: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
         let instanceId = UUID().uuidString
         Self.instances[instanceId] = OpenBiddingInterstitial(zoneID: zoneId)
         Self.instances[instanceId]?.delegate = self

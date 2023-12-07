@@ -5,8 +5,7 @@ import OpenBiddingHelper
 @objc(BidmadPluginRewardModule)
 class BidmadPluginRewardModule: RCTEventEmitter, BIDMADOpenBiddingRewardVideoDelegate {
 
-    private static var eventName = "BidmadRewardCallback"
-    private static let syncQueue: DispatchQueue = DispatchQueue(label: "com.adop.BidmadPluginReward")
+    private static let eventName = "BidmadRewardCallback"
     private static var instances: [String: OpenBiddingRewardVideo] = [:]
     
     override func supportedEvents() -> [String]! {
@@ -21,7 +20,7 @@ class BidmadPluginRewardModule: RCTEventEmitter, BIDMADOpenBiddingRewardVideoDel
         return "BidmadPluginRewardModule"
     }
 
-    func createInstance(zoneId: String, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+    func createInstance(zoneId: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
         let instanceId = UUID().uuidString
         Self.instances[instanceId] = OpenBiddingRewardVideo(zoneID: zoneId)
         Self.instances[instanceId]?.delegate = self

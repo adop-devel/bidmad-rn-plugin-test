@@ -64,33 +64,33 @@ class BidmadPluginGDPR {
     }
 
     async setDebug(testDeviceId: string, isEEA: boolean) {
-        await BidmadPluginGDPRModule.setDebug(testDeviceId, isEEA);
+        await BidmadPluginGDPRModule.setDebug(this.instanceId, testDeviceId, isEEA);
     }
 
     async requestConsentInfoUpdate() {
-        await BidmadPluginGDPRModule.requestConsentInfoUpdate();
+        await BidmadPluginGDPRModule.requestConsentInfoUpdate(this.instanceId);
     }
 
     async isConsentFormAvailable(): Promise<boolean> {
-        const isAvailable = await BidmadPluginGDPRModule.isConsentFormAvailable();
+        const isAvailable = await BidmadPluginGDPRModule.isConsentFormAvailable(this.instanceId);
         return isAvailable;
     }
 
     async loadForm() {
-        await BidmadPluginGDPRModule.loadForm();
+        await BidmadPluginGDPRModule.loadForm(this.instanceId);
     }
 
     async getConsentStatus(): Promise<BidmadUMPStatus> {
-        const status = BidmadPluginGDPRModule.getConsentStatus();
+        const status = BidmadPluginGDPRModule.getConsentStatus(this.instanceId);
         return status;
     }
 
     async reset() {
-        await BidmadPluginGDPRModule.reset();
+        await BidmadPluginGDPRModule.reset(this.instanceId);
     }
 
     async showForm() {
-        await BidmadPluginGDPRModule.showForm();
+        await BidmadPluginGDPRModule.showForm(this.instanceId);
     }
 }
 
