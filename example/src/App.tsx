@@ -86,6 +86,7 @@ async function GDPRInterfaceTest(): Promise<void> {
     }
   });
 
+  await gdprInterface?.setDebug('C71285C2-03C5-4EEA-9AB4-E4C717481BAF', true);
   await gdprInterface?.requestConsentInfoUpdate();
 }
 

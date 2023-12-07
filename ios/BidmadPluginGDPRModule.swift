@@ -19,12 +19,17 @@ class BidmadPluginGDPRModule: RCTEventEmitter, BIDMADGDPRforGoogleProtocolIdenti
     override static func moduleName() -> String! {
         return "BidmadPluginGDPRModule"
     }
+    
+    override init() {
+        super.init()
+        Self.shared = self
+    }
 
     func createInstance(resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
         DispatchQueue.main.async {
             let instanceId = UUID().uuidString;
             Self.instances[instanceId] = BIDMADGDPRforGoogle(UIViewController())
-            Self.instances[instanceId]!.consentStatusDelegate = Self.instances[instanceId]!
+            Self.instances[instanceId]!.perform(NSSelectorFromString("setConsentStatusDelegate:"), with:Self.instances[instanceId]!)
             resolve(instanceId)
         }
     }
@@ -44,9 +49,11 @@ class BidmadPluginGDPRModule: RCTEventEmitter, BIDMADGDPRforGoogleProtocolIdenti
         resolve(status)
     }
     
-    func loadForm(instanceId: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
-        Self.instances[instanceId]?.loadForm()
-        resolve(nil)
+    func loadForm(instanceId: String, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+        DispatchQueue.main.async {
+            Self.instances[instanceId]?.loadForm()
+            resolve(nil)
+        }
     }
     
     func getConsentStatus(instanceId: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
@@ -129,7 +136,7 @@ class BidmadPluginGDPRModule: RCTEventEmitter, BIDMADGDPRforGoogleProtocolIdenti
                   ])
     }
     
-    func onConsentFormDismissed(_ formError: Error, _ instance: BIDMADGDPRforGoogle) {
+    func onConsentFormDismissed(_ formError: Error!, _ instance: BIDMADGDPRforGoogle) {
         guard let instanceId = Self.instances
             .filter({ $0.value.isEqual(instance) })
             .first?
@@ -137,12 +144,20 @@ class BidmadPluginGDPRModule: RCTEventEmitter, BIDMADGDPRforGoogleProtocolIdenti
             return
         }
         
-        sendEvent(withName: Self.eventName,
-                  body: [
-                    "instanceId": instanceId,
-                    "action": "onConsentFormDismissed",
-                    "error": formError.localizedDescription
-                  ])
+        if let errorReason = formError?.localizedDescription {
+            sendEvent(withName: Self.eventName,
+                      body: [
+                        "instanceId": instanceId,
+                        "action": "onConsentFormDismissed",
+                        "error": errorReason
+                      ])
+        } else {
+            sendEvent(withName: Self.eventName,
+                      body: [
+                        "instanceId": instanceId,
+                        "action": "onConsentFormDismissed"
+                      ])
+        }
     }
 }
 
@@ -151,27 +166,27 @@ protocol BIDMADGDPRforGoogleProtocolIdentifiable {
     func onConsentInfoUpdateFailure(_ formError: Error, _ instance: BIDMADGDPRforGoogle)
     func onConsentFormLoadSuccess(_ instance: BIDMADGDPRforGoogle)
     func onConsentFormLoadFailure(_ formError: Error, _ instance: BIDMADGDPRforGoogle)
-    func onConsentFormDismissed(_ formError: Error, _ instance: BIDMADGDPRforGoogle)
+    func onConsentFormDismissed(_ formError: Error!, _ instance: BIDMADGDPRforGoogle)
 }
 
-extension BIDMADGDPRforGoogle: BIDMADGDPRforGoogleProtocol {
-    public func onConsentInfoUpdateSuccess() {
+extension BIDMADGDPRforGoogle {
+    @objc public func onConsentInfoUpdateSuccess() {
         BidmadPluginGDPRModule.shared?.onConsentInfoUpdateSuccess(self)
     }
     
-    public func onConsentInfoUpdateFailure(_ formError: Error) {
+    @objc public func onConsentInfoUpdateFailure(_ formError: Error) {
         BidmadPluginGDPRModule.shared?.onConsentInfoUpdateFailure(formError, self)
     }
     
-    public func onConsentFormLoadSuccess() {
+    @objc public func onConsentFormLoadSuccess() {
         BidmadPluginGDPRModule.shared?.onConsentFormLoadSuccess(self)
     }
     
-    public func onConsentFormLoadFailure(_ formError: Error) {
+    @objc public func onConsentFormLoadFailure(_ formError: Error) {
         BidmadPluginGDPRModule.shared?.onConsentFormLoadFailure(formError, self)
     }
     
-    public func onConsentFormDismissed(_ formError: Error) {
+    @objc public func onConsentFormDismissed(_ formError: Error!) {
         BidmadPluginGDPRModule.shared?.onConsentFormDismissed(formError, self)
     }
 }
