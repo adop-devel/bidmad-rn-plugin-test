@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, Button, SafeAreaView, TextInput } from 'react-n
 import { BidmadPluginTestView, BidmadPluginCommon, BidmadPluginTestController, BidmadPluginInterstitial, BidmadPluginReward, BidmadTrackingAuthorizationStatus } from 'bidmad-rn-plugin-test';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import BidmadPluginGDPR from '../../src/BidmadPluginGDPR';
 
 const Stack = createNativeStackNavigator();
 const ButtonStyle = { padding: 15 };
@@ -62,9 +63,39 @@ async function CommonInterfaceTest(): Promise<void> {
   console.log('Server Side Callback is', useSsc);
 }
 
+async function GDPRInterfaceTest(): Promise<void> {
+  const gdprInterface = await BidmadPluginGDPR.create();
+
+  gdprInterface?.setCallbacks({
+    onConsentInfoUpdateSuccess: () => {
+      console.log('GDPR: OnConsentInfoUpdateSuccess');
+      gdprInterface?.loadForm();
+    },
+    onConsentInfoUpdateFailure: (error: string) => {
+      console.log('GDPR: OnConsentInfoUpdateFailure', error);
+    },
+    onConsentFormLoadSuccess: () => {
+      console.log('GDPR: OnConsentFormLoadSuccess');
+      gdprInterface?.showForm();
+    },
+    onConsentFormLoadFailure: (error: string) => {
+      console.log('GDPR: OnConsentFormLoadFailure', error);
+    },
+    onConsentFormDismissed: (error: string|null) => {
+      console.log('GDPR: OnConsentFormDismissed', error);
+    }
+  });
+
+  await gdprInterface?.requestConsentInfoUpdate();
+}
+
 function HomeScreen({ navigation }: any) {
   CommonInterfaceTest().then(() => {
     console.log("Common Testing is DONE!");
+  });
+
+  GDPRInterfaceTest().then(() => {
+    console.log('GDPR Testing is DONE!');
   });
 
   return (

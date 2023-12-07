@@ -20,11 +20,13 @@ class BidmadPluginGDPRModule: RCTEventEmitter, BIDMADGDPRforGoogleProtocolIdenti
         return "BidmadPluginGDPRModule"
     }
 
-    func createInstance(resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
-        let instanceId = UUID().uuidString;
-        Self.instances[instanceId] = BIDMADGDPRforGoogle(UIViewController())
-        Self.instances[instanceId]!.consentStatusDelegate = Self.instances[instanceId]!
-        resolve(instanceId)
+    func createInstance(resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+        DispatchQueue.main.async {
+            let instanceId = UUID().uuidString;
+            Self.instances[instanceId] = BIDMADGDPRforGoogle(UIViewController())
+            Self.instances[instanceId]!.consentStatusDelegate = Self.instances[instanceId]!
+            resolve(instanceId)
+        }
     }
     
     func setDebug(instanceId: String, testDeviceId: String, isEEA: Bool, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
@@ -57,10 +59,12 @@ class BidmadPluginGDPRModule: RCTEventEmitter, BIDMADGDPRforGoogleProtocolIdenti
         resolve(nil)
     }
     
-    func showForm(instanceId: String, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
-        Self.instances[instanceId]?.parentViewController = BIDMADUtil.topMostController() ?? .init()
-        Self.instances[instanceId]?.showForm()
-        resolve(nil)
+    func showForm(instanceId: String, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+        DispatchQueue.main.async {
+            Self.instances[instanceId]?.parentViewController = BIDMADUtil.topMostController() ?? .init()
+            Self.instances[instanceId]?.showForm()
+            resolve(nil)
+        }
     }
 
     func onConsentInfoUpdateSuccess(_ instance: BIDMADGDPRforGoogle) {
