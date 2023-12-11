@@ -5,8 +5,15 @@ import {
   Platform,
   View,
   findNodeHandle,
-  NativeEventEmitter
+  NativeEventEmitter,
+  Text
 } from 'react-native';
+
+export const BidmadBannarSize = {
+    BANNER: '320x50',
+    LARGE_BANNER: '320x100',
+    MREC: '300x250'
+} as const;
 
 const LINKING_ERROR =
   `The package 'react-native-bidmad-plugin-test' doesn't seem to be linked. Make sure: \n\n` +
@@ -44,6 +51,7 @@ type BidmadPluginTestProps = {
   iOSZoneId?: string;
   androidZoneId?: string;
   refreshInterval?: number;
+  bannerSize?: BidmadBannarSize;
   onControllerCreated?: (controller: BidmadPluginTestController) => void;
   onLoad?: () => void;
   onLoadFail?: (event) => void;
@@ -57,93 +65,66 @@ export const BidmadPluginTestView = (props: BidmadPluginTestProps) => {
     throw new Error(LINKING_ERROR);
   }
 
+  var width;
+  var height;
+  if(props.bannerSize == BidmadBannarSize.MREC){
+    width = 300;
+    height = 250;
+  }else if(props.bannerSize == BidmadBannarSize.LARGE_BANNER) {
+    width = 320;
+    height = 100;
+  }else {
+    width = 320;
+    height = 50;
+  }
+
+  const [bannerWidth, setBannerWidth] = useState<number>(width);
+  const [bannerHeight, setBannerHeight] = useState<number>(height);
+
   const bidmadRef = useRef(null);
 
   useEffect(() => {
     const controller = new BidmadPluginTestController(bidmadRef, props);
-    console.log(findNodeHandle(bidmadRef.current));
     if (props.onControllerCreated) {
       props.onControllerCreated(controller);
     }
 
+    const viewId = findNodeHandle(bidmadRef.current);
+
     if (Platform.OS === 'android') {
-      setAndroidCallbackEvent();
+      setAndroidCallbackEvent(viewId);
       controller.load();
     }
+
+    return () => {
+      if (Platform.OS === 'android') {
+        removeAndroidCallbackEvent(viewId);
+      }
+    };
   }, [props.onControllerCreated]);
 
-  const [bannerWidth, setBannerWidth] = useState<number>(0);
-  const [bannerHeight, setBannerHeight] = useState<number>(0);
-  const [visibility, setVisibility] = useState<number>(0);
-
-  const loadCallbackWithResizing = useCallback(
-    (event: any) => {
-      // when sending the load callback event from swift or java to rn-js,
-      // width and height arguments must be passed from the event.
-      const width = event.nativeEvent.width;
-      const height = event.nativeEvent.height;
-
-      if (bannerWidth < width) {
-        setBannerWidth(width);
-      }
-
-      if (bannerHeight < height) {
-        setBannerHeight(height);
-      }
-
-      if (visibility < 1) {
-        setVisibility(1);
-      }
-
-      if (props.onLoad) {
-        props.onLoad();
-      }
-    },
-    [props.onLoad]
-  );
-
-  const setAndroidCallbackEvent = () => {
-    const viewId = findNodeHandle(bidmadRef.current);
+  const setAndroidCallbackEvent = (viewId) => {
     const loadEventKey = 'onLoad_'+viewId;
     if(androidCallbackEvents[loadEventKey] != undefined){
-      // DeviceEventEmitter.remove(callbackEvents[loadEventKey]);
       androidCallbackEvents[loadEventKey].remove();
       androidCallbackEvents[loadEventKey] = undefined;
     }
 
     const loadEvent = androidEventEmitter.addListener(loadEventKey, (params) => {
-      console.log("onLoad : ", params);
       androidCallbackEvents[loadEventKey] = loadEvent
-
-      const width = event.nativeEvent.width;
-      const height = event.nativeEvent.height;
-
-      if (bannerWidth < width) {
-        setBannerWidth(width);
-      }
-
-      if (bannerHeight < height) {
-        setBannerHeight(height);
-      }
-
-      if (visibility < 1) {
-        setVisibility(1);
-      }
 
       if (props.onLoad) {
         props.onLoad();
       }
-    })
+    });
 
     const loadFailEventKey = 'onLoadFail_'+viewId;
     if(androidCallbackEvents[loadFailEventKey] != undefined){
-      // DeviceEventEmitter.remove(callbackEvents[loadFailEventKey]);
       androidCallbackEvents[loadFailEventKey].remove();
       androidCallbackEvents[loadFailEventKey] = undefined;
     }
 
     const loadFailEvent = androidEventEmitter.addListener(loadFailEventKey, (params) => {
-      console.log("onLoad : ", params);
       androidCallbackEvents[loadFailEventKey] = loadEvent
 
       if (props.onLoadFail) {
@@ -153,13 +134,11 @@ export const BidmadPluginTestView = (props: BidmadPluginTestProps) => {
 
     const clickEventKey = 'onClick_'+viewId;
     if(androidCallbackEvents[clickEventKey] != undefined){
-      // DeviceEventEmitter.remove(callbackEvents[clickEventKey]);
       androidCallbackEvents[clickEventKey].remove();
       androidCallbackEvents[clickEventKey] = undefined;
     }
 
     const clickEvent = androidEventEmitter.addListener(clickEventKey, (params) => {
-      console.log("onLoad : ", params);
       androidCallbackEvents[clickEventKey] = loadEvent
 
       if (props.onClick) {
@@ -168,28 +147,38 @@ export const BidmadPluginTestView = (props: BidmadPluginTestProps) => {
     })
   }
 
-  const onLayout = (event: any) => {
-    console.log("onLayout : ", event);
-    const { width, height } = event.nativeEvent.layout;
-    setBannerWidth(width);
-    setBannerHeight(height);
-  };
+  const removeAndroidCallbackEvent = (viewId) => {
+    const loadEventKey = 'onLoad_'+viewId;
+    if(androidCallbackEvents[loadEventKey] != undefined){
+      androidCallbackEvents[loadEventKey].remove();
+      androidCallbackEvents[loadEventKey] = undefined;
+    }
+
+    const loadFailEventKey = 'onLoadFail_'+viewId;
+    if(androidCallbackEvents[loadFailEventKey] != undefined){
+      androidCallbackEvents[loadFailEventKey].remove();
+      androidCallbackEvents[loadFailEventKey] = undefined;
+    }
+
+    const clickEventKey = 'onClick_'+viewId;
+    if(androidCallbackEvents[clickEventKey] != undefined){
+      androidCallbackEvents[clickEventKey].remove();
+      androidCallbackEvents[clickEventKey] = undefined;
+    }
+  }
 
   if (Platform.OS === 'android') {
     return (
       <View>
         <BidmadPluginTestBannerComponent
           style={{
-            opacity: 1,
-            width: 320,
-            height: 50,
+            width: bannerWidth,
+            height: bannerHeight,
             alignSelf: 'center',
-            backgroundColor: 'yellow',
           }}
           {...props}
           zoneId={props.androidZoneId}
           ref={bidmadRef}
-          onLayout={onLayout}
         />
       </View> 
     );
@@ -198,17 +187,13 @@ export const BidmadPluginTestView = (props: BidmadPluginTestProps) => {
       <View>
         <BidmadPluginTestBannerComponent
           style={{
-            opacity: visibility,
             width: bannerWidth,
             height: bannerHeight,
             alignSelf: 'center',
           }}
           {...props}
           zoneId={props.iOSZoneId}
-          onLoad={loadCallbackWithResizing}
-          viewId={bidmadRef.current}
           ref={bidmadRef}
-          onLayout={onLayout}
         />
       </View>
     );
