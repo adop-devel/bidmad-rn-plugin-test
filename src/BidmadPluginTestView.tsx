@@ -5,15 +5,16 @@ import {
   Platform,
   View,
   findNodeHandle,
-  NativeEventEmitter,
-  Text
+  NativeEventEmitter
 } from 'react-native';
 
-export const BidmadBannarSize = {
+export const BidmadBannerSize = {
     BANNER: '320x50',
     LARGE_BANNER: '320x100',
     MREC: '300x250'
 } as const;
+
+export type BidmadBannerSizeType = typeof BidmadBannerSize[keyof typeof BidmadBannerSize];
 
 const LINKING_ERROR =
   `The package 'react-native-bidmad-plugin-test' doesn't seem to be linked. Make sure: \n\n` +
@@ -24,9 +25,13 @@ const LINKING_ERROR =
 const ComponentName = 'BidmadPluginTestView';
 const BidmadPluginTestBannerComponent = requireNativeComponent(ComponentName);
 
-const androidEventEmitter = new NativeEventEmitter();
+var androidEventEmitter: NativeEventEmitter | null = null;
+var androidCallbackEvents: any = {};
 
-var androidCallbackEvents = {};
+if(Platform.OS === 'android'){
+  androidEventEmitter = new NativeEventEmitter();
+}
+
 
 class BidmadPluginTestController {
   private bidmadRef: BidmadPluginTestRef;
@@ -41,7 +46,7 @@ class BidmadPluginTestController {
     const handle = findNodeHandle(this.bidmadRef.current);
     if (handle) {
       const commandId = UIManager.getViewManagerConfig(ComponentName).Commands
-        .load.toString();
+        .load!.toString();
       UIManager.dispatchViewManagerCommand(handle, commandId, [handle, this.props.androidZoneId]);
     }
   }
@@ -51,10 +56,10 @@ type BidmadPluginTestProps = {
   iOSZoneId?: string;
   androidZoneId?: string;
   refreshInterval?: number;
-  bannerSize?: BidmadBannarSize;
+  bannerSize?: BidmadBannerSizeType;
   onControllerCreated?: (controller: BidmadPluginTestController) => void;
   onLoad?: () => void;
-  onLoadFail?: (event) => void;
+  onLoadFail?: (error: string) => void;
   onClick?: () => void;
 };
 
@@ -65,21 +70,26 @@ export const BidmadPluginTestView = (props: BidmadPluginTestProps) => {
     throw new Error(LINKING_ERROR);
   }
 
-  var width;
-  var height;
-  if(props.bannerSize == BidmadBannarSize.MREC){
-    width = 300;
-    height = 250;
-  }else if(props.bannerSize == BidmadBannarSize.LARGE_BANNER) {
-    width = 320;
-    height = 100;
-  }else {
+  let width: number;
+  let height: number;
+
+  if (props.bannerSize) {
+    if (props.bannerSize === BidmadBannerSize.MREC) {
+      width = 300;
+      height = 250;
+    } else if (props.bannerSize === BidmadBannerSize.LARGE_BANNER) {
+      width = 320;
+      height = 100;
+    } else {
+      width = 320;
+      height = 50;
+    }
+
+  } else {
+    // default value if size is not given
     width = 320;
     height = 50;
   }
-
-  const [bannerWidth, setBannerWidth] = useState<number>(width);
-  const [bannerHeight, setBannerHeight] = useState<number>(height);
 
   const bidmadRef = useRef(null);
 
@@ -89,7 +99,7 @@ export const BidmadPluginTestView = (props: BidmadPluginTestProps) => {
       props.onControllerCreated(controller);
     }
 
-    const viewId = findNodeHandle(bidmadRef.current);
+    const viewId: number = findNodeHandle(bidmadRef.current)!;
 
     if (Platform.OS === 'android') {
       setAndroidCallbackEvent(viewId);
@@ -103,14 +113,14 @@ export const BidmadPluginTestView = (props: BidmadPluginTestProps) => {
     };
   }, [props.onControllerCreated]);
 
-  const setAndroidCallbackEvent = (viewId) => {
+  const setAndroidCallbackEvent = (viewId: number) => {
     const loadEventKey = 'onLoad_'+viewId;
     if(androidCallbackEvents[loadEventKey] != undefined){
       androidCallbackEvents[loadEventKey].remove();
       androidCallbackEvents[loadEventKey] = undefined;
     }
 
-    const loadEvent = androidEventEmitter.addListener(loadEventKey, (params) => {
+    const loadEvent = androidEventEmitter?.addListener(loadEventKey, (_) => {
       androidCallbackEvents[loadEventKey] = loadEvent
 
       if (props.onLoad) {
@@ -124,7 +134,7 @@ export const BidmadPluginTestView = (props: BidmadPluginTestProps) => {
       androidCallbackEvents[loadFailEventKey] = undefined;
     }
 
-    const loadFailEvent = androidEventEmitter.addListener(loadFailEventKey, (params) => {
+    const loadFailEvent = androidEventEmitter?.addListener(loadFailEventKey, (params) => {
       androidCallbackEvents[loadFailEventKey] = loadFailEvent
 
       if (props.onLoadFail) {
@@ -138,7 +148,7 @@ export const BidmadPluginTestView = (props: BidmadPluginTestProps) => {
       androidCallbackEvents[clickEventKey] = undefined;
     }
 
-    const clickEvent = androidEventEmitter.addListener(clickEventKey, (params) => {
+    const clickEvent = androidEventEmitter?.addListener(clickEventKey, (_) => {
       androidCallbackEvents[clickEventKey] = clickEvent
 
       if (props.onClick) {
@@ -147,7 +157,7 @@ export const BidmadPluginTestView = (props: BidmadPluginTestProps) => {
     })
   }
 
-  const removeAndroidCallbackEvent = (viewId) => {
+  const removeAndroidCallbackEvent = (viewId: number) => {
     const loadEventKey = 'onLoad_'+viewId;
     if(androidCallbackEvents[loadEventKey] != undefined){
       androidCallbackEvents[loadEventKey].remove();
@@ -172,8 +182,8 @@ export const BidmadPluginTestView = (props: BidmadPluginTestProps) => {
       <View>
         <BidmadPluginTestBannerComponent
           style={{
-            width: bannerWidth,
-            height: bannerHeight,
+            width: width,
+            height: height,
             alignSelf: 'center',
           }}
           {...props}
@@ -187,8 +197,8 @@ export const BidmadPluginTestView = (props: BidmadPluginTestProps) => {
       <View>
         <BidmadPluginTestBannerComponent
           style={{
-            width: bannerWidth,
-            height: bannerHeight,
+            width: width,
+            height: height,
             alignSelf: 'center',
           }}
           {...props}
