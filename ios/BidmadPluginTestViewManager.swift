@@ -92,10 +92,7 @@ class BidmadPluginTestView : UIView, BIDMADOpenBiddingBannerDelegate {
             return
         }
         
-        onLoad?([
-            "width": adSize.width,
-            "height": adSize.height,
-        ])
+        onLoad?([String: Any]())
     }
     
     func onClickAd(_ bidmadAd: OpenBiddingBanner) {
@@ -103,7 +100,7 @@ class BidmadPluginTestView : UIView, BIDMADOpenBiddingBannerDelegate {
     }
     
     func onLoadFailAd(_ bidmadAd: OpenBiddingBanner, error: Error) {
-        onLoadFail?([String: Any]())
+        onLoadFail?(["error": error.localizedDescription])
     }
     
     func load() {

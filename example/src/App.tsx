@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Button, SafeAreaView, TextInput } from 'react-native';
-import { BidmadPluginTestView, BidmadPluginCommon, BidmadPluginTestController, BidmadPluginInterstitial, BidmadPluginReward, BidmadTrackingAuthorizationStatus, BidmadBannarSize } from 'bidmad-rn-plugin-test';
+import { BidmadPluginTestView, BidmadPluginCommon, BidmadPluginTestController, BidmadPluginInterstitial, BidmadPluginReward, BidmadTrackingAuthorizationStatus, BidmadBannerSize } from 'bidmad-rn-plugin-test';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -146,7 +146,7 @@ function BannerAdSample({ navigation }: any) {
           <BidmadPluginTestView
             iOSZoneId='1c3e3085-333f-45af-8427-2810c26a72fc'
             androidZoneId='f9d29451-6fc1-4527-b855-dd5b03052862'
-            bannerSize={BidmadBannarSize.BANNER}
+            bannerSize={BidmadBannerSize.BANNER}
             onLoad={() => {
               setLoadCounter(loadCounter + 1);
             }}

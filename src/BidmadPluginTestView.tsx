@@ -14,8 +14,6 @@ export const BidmadBannerSize = {
     MREC: '300x250'
 } as const;
 
-export type BidmadBannerSizeType = typeof BidmadBannerSize[keyof typeof BidmadBannerSize];
-
 const LINKING_ERROR =
   `The package 'react-native-bidmad-plugin-test' doesn't seem to be linked. Make sure: \n\n` +
   Platform.select({ ios: "- You have run 'pod install'\n", default: '' }) +
@@ -31,7 +29,6 @@ var androidCallbackEvents: any = {};
 if(Platform.OS === 'android'){
   androidEventEmitter = new NativeEventEmitter();
 }
-
 
 class BidmadPluginTestController {
   private bidmadRef: BidmadPluginTestRef;
@@ -56,7 +53,7 @@ type BidmadPluginTestProps = {
   iOSZoneId?: string;
   androidZoneId?: string;
   refreshInterval?: number;
-  bannerSize?: BidmadBannerSizeType;
+  bannerSize?: string;
   onControllerCreated?: (controller: BidmadPluginTestController) => void;
   onLoad?: () => void;
   onLoadFail?: (error: string) => void;
@@ -203,6 +200,12 @@ export const BidmadPluginTestView = (props: BidmadPluginTestProps) => {
           }}
           {...props}
           zoneId={props.iOSZoneId}
+          onLoadFail={(event: any) => {
+            const error: string = event.nativeEvent.error;
+            if (props.onLoadFail) {
+              props.onLoadFail(error);
+            }
+          }}
           ref={bidmadRef}
         />
       </View>
