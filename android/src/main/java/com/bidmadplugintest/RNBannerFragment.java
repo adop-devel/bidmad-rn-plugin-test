@@ -106,8 +106,4 @@ public class RNBannerFragment extends Fragment {
             }
         };
     }
-
-    public void getBannerSize(){
-        mBanner.getReqBannerSize();
-    }
 }
