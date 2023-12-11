@@ -125,7 +125,7 @@ export const BidmadPluginTestView = (props: BidmadPluginTestProps) => {
     }
 
     const loadFailEvent = androidEventEmitter.addListener(loadFailEventKey, (params) => {
-      androidCallbackEvents[loadFailEventKey] = loadEvent
+      androidCallbackEvents[loadFailEventKey] = loadFailEvent
 
       if (props.onLoadFail) {
         props.onLoadFail();
@@ -139,7 +139,7 @@ export const BidmadPluginTestView = (props: BidmadPluginTestProps) => {
     }
 
     const clickEvent = androidEventEmitter.addListener(clickEventKey, (params) => {
-      androidCallbackEvents[clickEventKey] = loadEvent
+      androidCallbackEvents[clickEventKey] = clickEvent
 
       if (props.onClick) {
         props.onClick();
