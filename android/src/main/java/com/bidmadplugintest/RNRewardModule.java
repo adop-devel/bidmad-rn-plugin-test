@@ -45,19 +45,23 @@ public class RNRewardModule extends ReactContextBaseJavaModule {
 	}
 
 	@ReactMethod
-	public void load(String instanceId) {
+	public void load(String instanceId, Promise promise) {
 		RNReward reward = RNReward.getInstance(instanceId);
 		if (reward != null) {
 			reward.load();
 		}
+
+		promise.resolve(null);
 	}
 
 	@ReactMethod
-	public void show(String instanceId) {
+	public void show(String instanceId, Promise promise) {
 		RNReward reward = RNReward.getInstance(instanceId);
 		if (reward != null) {
 			reward.show();
 		}
+
+		promise.resolve(null);
 	}
 
 	@ReactMethod
@@ -71,11 +75,13 @@ public class RNRewardModule extends ReactContextBaseJavaModule {
 	}
 
 	@ReactMethod
-	public void disposeInstance(String instanceId) {
+	public void disposeInstance(String instanceId, Promise promise) {
 		RNReward reward = RNReward.getInstance(instanceId);
 		if (reward != null) {
 			reward.release();
 		}
+
+		promise.resolve(null);
 	}
 
 	public void setListener(RNReward reward) {

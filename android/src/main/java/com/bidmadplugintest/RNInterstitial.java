@@ -49,10 +49,4 @@ public class RNInterstitial extends BaseInterstitial {
 	public void release() {
 		mInstanceMap.remove(mInstanceId);
 	}
-//	@Override
-//	public void setListener(InterstitialListener listener) {
-//		if(mListener == null) { //중복 셋팅 방지
-//			super.setListener(listener);
-//		}
-//	}
 }

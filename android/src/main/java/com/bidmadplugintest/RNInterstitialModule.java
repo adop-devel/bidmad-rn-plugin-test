@@ -51,19 +51,23 @@ public class RNInterstitialModule extends ReactContextBaseJavaModule {
 	}
 
 	@ReactMethod
-	public void load(String instanceId) {
+	public void load(String instanceId, Promise promise) {
 		RNInterstitial intersitial = RNInterstitial.getInstance(instanceId);
 		if (intersitial != null) {
 			intersitial.load();
 		}
+
+		promise.resolve(null);
 	}
 
 	@ReactMethod
-	public void show(String instanceId) {
+	public void show(String instanceId, Promise promise) {
 		RNInterstitial intersitial = RNInterstitial.getInstance(instanceId);
 		if (intersitial != null) {
 			intersitial.show();
 		}
+
+		promise.resolve(null);
 	}
 
 	@ReactMethod
@@ -77,11 +81,13 @@ public class RNInterstitialModule extends ReactContextBaseJavaModule {
 	}
 
 	@ReactMethod
-	public void disposeInstance(String instanceId) {
+	public void disposeInstance(String instanceId, Promise promise) {
 		RNInterstitial intersitial = RNInterstitial.getInstance(instanceId);
 		if (intersitial != null) {
 			intersitial.release();
 		}
+
+		promise.resolve(null);
 	}
 
 	public void setListener(RNInterstitial interstitial) {

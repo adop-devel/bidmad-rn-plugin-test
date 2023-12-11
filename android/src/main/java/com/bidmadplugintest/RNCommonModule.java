@@ -35,52 +35,57 @@ public class RNCommonModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void setChildDirectedAds(boolean isChildDirectedAds){
+    public void setChildDirectedAds(boolean isChildDirectedAds, Promise promise){
         AdOption.getInstance().setChildDirected(isChildDirectedAds);
+        promise.resolve(null);
     }
 
     @ReactMethod
-    public boolean isChildDirectedTreatment(){
-        return AdOption.getInstance().isChildDirected();
+    public void isChildDirectedTreatment(Promise promise){
+        promise.resolve(AdOption.getInstance().isChildDirected());
     }
 
     @ReactMethod
-    public void setDebug(boolean isDebug){
+    public void setDebug(boolean isDebug, Promise promise){
         BidmadCommon.setDebugging(isDebug);
+        promise.resolve(null);
     }
 
     @ReactMethod
-    public boolean isDebug(){
-        return false; //추후 BidmadCommon에 추가
+    public void isDebug(Promise promise){
+        promise.resolve(BidmadCommon.isDebug());
     }
 
     @ReactMethod
-    public void setTestDeviceId(String testDeviceId){
+    public void setTestDeviceId(String testDeviceId, Promise promise){
         BidmadCommon.setGgTestDeviceid(testDeviceId);
+        promise.resolve(null);
     }
 
     @ReactMethod
-    public String getTestDeviceId(){
-        return BidmadCommon.getGgTestDeviceid();
+    public void getTestDeviceId(Promise promise){
+        promise.resolve(BidmadCommon.getGgTestDeviceid());
     }
 
     @ReactMethod
-    public void setCuid(String cuid){
+    public void setCuid(String cuid, Promise promise){
         AdOption.getInstance().setCuid(cuid);
+        promise.resolve(null);
     }
 
     @ReactMethod
-    public String getCuid(){
-        return AdOption.getInstance().getCuid();
+    public void getCuid(Promise promise){
+        promise.resolve(AdOption.getInstance().getCuid());
     }
 
     @ReactMethod
-    public void setUseServerSideCallback(boolean useServerSideCallback){
+    public void setUseServerSideCallback(boolean useServerSideCallback, Promise promise){
         AdOption.getInstance().setUseServerSideCallback(useServerSideCallback);
+        promise.resolve(null);
     }
 
     @ReactMethod
-    public boolean getUseServerSideCallback(){
-        return AdOption.getInstance().getUseServerSideCallback();
+    public void getUseServerSideCallback(Promise promise){
+        promise.resolve(AdOption.getInstance().getUseServerSideCallback());
     }
 }

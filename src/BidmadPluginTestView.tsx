@@ -118,7 +118,7 @@ export const BidmadPluginTestView = (props: BidmadPluginTestProps) => {
     }
 
     const loadEvent = androidEventEmitter?.addListener(loadEventKey, (_) => {
-      androidCallbackEvents[loadEventKey] = loadEvent
+      androidCallbackEvents[loadEventKey] = loadEvent;
 
       if (props.onLoad) {
         props.onLoad();
@@ -132,10 +132,11 @@ export const BidmadPluginTestView = (props: BidmadPluginTestProps) => {
     }
 
     const loadFailEvent = androidEventEmitter?.addListener(loadFailEventKey, (params) => {
-      androidCallbackEvents[loadFailEventKey] = loadFailEvent
+      androidCallbackEvents[loadFailEventKey] = loadFailEvent;
 
       if (props.onLoadFail) {
-        props.onLoadFail();
+        const msg = params ? params.error : "No Message"; 
+        props.onLoadFail(msg);
       }
     })
 
@@ -146,7 +147,7 @@ export const BidmadPluginTestView = (props: BidmadPluginTestProps) => {
     }
 
     const clickEvent = androidEventEmitter?.addListener(clickEventKey, (_) => {
-      androidCallbackEvents[clickEventKey] = clickEvent
+      androidCallbackEvents[clickEventKey] = clickEvent;
 
       if (props.onClick) {
         props.onClick();

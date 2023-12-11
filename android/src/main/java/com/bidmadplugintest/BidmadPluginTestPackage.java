@@ -19,6 +19,7 @@ public class BidmadPluginTestPackage implements ReactPackage {
     modules.add(new RNCommonModule(reactContext));
     modules.add(new RNInterstitialModule(reactContext));
     modules.add(new RNRewardModule(reactContext));
+    modules.add(new RNGDPRModule(reactContext));
 
     return modules;
   }
